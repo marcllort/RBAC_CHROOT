@@ -2,137 +2,11 @@
 
 #cal fer users a un disc apart i canviar path
 
-#rm -rf /users
-
-
-
 
 function=$1
 rol=$3
 user=$2
 
-JAIL=/users/$rol
-JAIL_BIN=$JAIL/bin/
-
-function copy_binary()
-{
-	BINARY=$(which $1)
-
-	cp $BINARY $JAIL/$BINARY
-
-	copy_dependencies $BINARY
-}
-
-function copy_dependencies()
-{
-	# http://www.cyberciti.biz/files/lighttpd/l2chroot.txt
-
-	FILES="$(ldd $1 | awk '{ print $3 }' |egrep -v ^'\(')"
-
-	echo "Copying shared files/libs to $JAIL..."
-
-	for i in $FILES
-	do
-		d="$(dirname $i)"
-
-		[ ! -d $JAIL$d ] && mkdir -p $JAIL$d || :
-
-		/bin/cp $i $JAIL$d
-	done
-
-	sldl="$(ldd $1 | grep 'ld-linux' | awk '{ print $1}')"
-
-	# now get sub-dir
-	sldlsubdir="$(dirname $sldl)"
-
-	if [ ! -f $JAIL$sldl ];
-	then
-		echo "Copying $sldl $JAIL$sldlsubdir..."
-		/bin/cp $sldl $JAIL$sldlsubdir
-	else
-		:
-	fi
-}
-
-function actualitzaDades()
-{
-	cd /users/$rol/etc
-
-    cp /etc/ld.so.cache .
-    cp /etc/ld.so.conf .
-    cp /etc/nsswitch.conf .
-    cp /etc/passwd .
-    cp /etc/group .
-    cp /etc/shadow .
-    cp /etc/hosts .
-    cp /etc/resolv.conf .
-
-	chmod 700 /users/$rol/home/*
-
-}
-
-function visitor()
-{
-	copy_binary bash
-	copy_binary touch
-	copy_binary mkdir
-	copy_binary rm
-	#cd va sol
-	copy_binary ls
-	copy_binary vim
-	copy_binary nano
-
-	#en teoria no shan de posar pero no crec q passi res
-	copy_binary whoami
-	copy_binary vi
-	copy_binary cat
-	copy_binary clear
-	copy_binary rm
-	copy_binary rmdir
-}
-
-function basic()
-{
-	visitor
-
-	copy_binary gcc
-	copy_binary make
-	copy_binary kill
-}
-
-function medium()
-{
-	basic
-
-	copy_binary java
-	copy_binary ln
-	copy_binary ps
-	copy_binary python
-	copy_binary	pip #pip3 tmb?
-	copy_binary valgrind
-	copy_binary grep
-	copy_binary awk
-	copy_binary sed
-}
-
-function advanced()
-{			#cal posar 2 comandes mes, les que creguem
-	medium
-
-	copy_binary chmod
-	copy_binary chown
-	copy_binary strace
-	copy_binary chroot
-	#copy_binary
-	#copy_binary
-}
-
-function limitatemps()
-{
-cat <<EOF | at midnight 
-bash sudo rbac -r $user $rol $1
-EOF
-}
 
 function creaUser()
 {
@@ -140,71 +14,15 @@ function creaUser()
 	if getent passwd $user > /dev/null 2>&1; then
 		echo "User already exists!"
 	else
-		if [ ! -d /users/$rol/home/$user ]; then
-			cp -r /etc/skel /users/$rol/home/$user
-		fi
-		#rm -rf /users/$rol/home/$user					#cal no borrar
 		
-		useradd -G $rol $user -d /home/$user
+		useradd -G $rol $user -d /$user/home/$user
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
 		
-		case $user in
-			basic)
-				limitatemps
-				;;
-			
-			medium)
-				limitatemps
-				;;
-			advanced)
-				;;
-			*)
-				limitatemps userhome
-				;;
-			
-		esac
-
-		actualitzaDades
-
-		chown $user: /users/$rol/home/$user
 	fi
 	
 }
 
-function add()
-{
-	case "$rol" in
-        datastore)
-            creaUser
-            ;;
-         
-        visitor)
-            visitor
-            creaUser
-            ;;
-         
-        basic)
-            basic
-            creaUser
-            ;;
 
-        medium)
-            medium
-            creaUser
-            ;;
-
-        advanced)
-            advanced
-            creaUser
-            ;;
-         
-        *)
-            echo $"$rol : No es un tipus d'usuari"
-            exit 1
- 
-	esac
-
-}
 
 function remove()
 {
@@ -213,14 +31,17 @@ function remove()
 		userhome)
 			echo "Deleting home..."
 			userdel $user
-			rm -rf /users/$rol/home/$user
+			
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
-			echo "User deleted"
+				rm -rf /users/$rol/$user/home/$user
+				echo "User deleted"
 			else
-			echo "User is logged in. After he logs out, user will be deleted."
-			me="$(whoami)"
-			echo "userdel $me" >> /users/$rol/home/$user/.bash_logout
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
 			fi
 			;;
 
@@ -229,11 +50,13 @@ function remove()
 			userdel $user
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
-			echo "User deleted"
+				echo "User deleted"
 			else
-			echo "User is logged in. After he logs out, user will be deleted."
-			me="$(whoami)"
-			echo "userdel $me" >> /users/$rol/home/$user/.bash_logout
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
 			fi
 			;;
 		
@@ -262,7 +85,7 @@ fi
 case "$function" in
 
 	"-a" | "--add")
-		add
+		creaUser
 		;;
 	"-r" | "--remove")
 		remove $4
