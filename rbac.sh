@@ -68,7 +68,7 @@ function actualitzaDades()
     cp /etc/resolv.conf .
 
 	chmod 700 /users/$rol/home/*
-	
+
 }
 
 function visitor()
