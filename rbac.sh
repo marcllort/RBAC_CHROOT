@@ -127,6 +127,12 @@ function advanced()
 	#copy_binary
 }
 
+function limitatemps()
+{
+cat <<EOF | at midnight 
+bash sudo rbac -r $user $rol $1
+EOF
+}
 
 function creaUser()
 {
@@ -134,11 +140,29 @@ function creaUser()
 	if getent passwd $user > /dev/null 2>&1; then
 		echo "User already exists!"
 	else
-		rm -rf /users/$rol/home/$user
-		cp -r /etc/skel /users/$rol/home/$user
+		if [ ! -d /users/$rol/home/$user ]; then
+			cp -r /etc/skel /users/$rol/home/$user
+		fi
+		#rm -rf /users/$rol/home/$user					#cal no borrar
 		
 		useradd -G $rol $user -d /home/$user
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
+		
+		case $user in
+			basic)
+				limitatemps
+				;;
+			
+			medium)
+				limitatemps
+				;;
+			advanced)
+				;;
+			*)
+				limitatemps userhome
+				;;
+			
+		esac
 
 		actualitzaDades
 
@@ -184,7 +208,36 @@ function add()
 
 function remove()
 {
-    userdel $user
+	case $1 in
+
+		userhome)
+			echo "Deleting home..."
+			userdel $user
+			rm -rf /users/$rol/home/$user
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+			echo "User deleted"
+			else
+			echo "User is logged in. After he logs out, user will be deleted."
+			me="$(whoami)"
+			echo "userdel $me" >> /users/$rol/home/$user/.bash_logout
+			fi
+			;;
+
+		*)
+			echo "Deleting user..."
+			userdel $user
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+			echo "User deleted"
+			else
+			echo "User is logged in. After he logs out, user will be deleted."
+			me="$(whoami)"
+			echo "userdel $me" >> /users/$rol/home/$user/.bash_logout
+			fi
+			;;
+		
+	esac
 }
 
 
@@ -194,7 +247,7 @@ function help {
 	echo "Usage: rbac [COMMAND]"
 	echo "Add and remove users.\n"
 	echo "-a, --add			add user. Must specify user type. Ex: rbac -a foo visitor"
-	echo "-r, --remove			remove user. Ex: rbac -r foo"
+	echo "-r, --remove			remove user. If added userhome, home will be deleted to Ex: rbac -r foo visitor userhome"
 	echo "-h, --help			help info"
 }
 
@@ -212,7 +265,7 @@ case "$function" in
 		add
 		;;
 	"-r" | "--remove")
-		remove
+		remove $4
 		;;
 	"-h" | "--help")	
 		help
