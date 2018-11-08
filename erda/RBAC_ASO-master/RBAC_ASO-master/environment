@@ -1,0 +1,99 @@
+#!/bin/bash
+
+function showMissing {
+	echo "environment: missing operand."
+	echo "Try: 'environment --help' for more information."
+}
+
+function confirm {
+	read -p "Continue (y/n)? " choice
+	case "$choice" in
+		y|Y ) 
+			echo "yes"
+			;;
+		n|N ) 
+			echo "no"
+			exit
+			;;
+		* ) 
+			echo "environment: invalid confirmation."
+			exit
+			;;
+	esac
+}
+
+function confirmUser {
+	read -p "Username? " choice
+	if [ $choice != $USER ]
+	then
+		echo "environment: invalid confirmation."
+		exit
+	fi	
+
+}
+
+function help {
+	echo "Usage: environment [COMMAND]"
+	echo -e "Manage environment.\n"
+	echo "-c, --clean-all			remove environment and home"
+	echo "-r, --reset				remove and reload environment"
+	echo "-l, --list-commands			display available commands to execute"
+	echo "--help				display this help and exit"
+	echo "--request-command [MESSAGE]	request a new command to admin"
+}	
+
+function clean {
+	confirm
+	confirmUser
+	echo "clean"
+}
+
+function reset {
+	confirm
+	echo "reset"
+}
+
+function list {
+	echo "list"
+}
+
+function request {
+	shift
+	if [ $# -lt 1 ]
+	then
+		showMissing
+		exit	
+	fi
+	echo "$1" #$1 contains the command argument
+}
+
+if [ $# -lt 1 ]
+then
+	showMissing
+fi
+
+while [ "$1" != "" ] 
+do
+	case "$1" in
+
+		"-c" | "--clean-all")
+			clean
+			;;
+		"-r" | "--reset")
+			reset
+			;;
+		"--help")	
+			help
+			;;
+		"-l" | "--list-commands")
+			list
+			;;
+		"--request-command")
+			request
+			;;
+		*)
+			echo "environment: invalid command."
+			echo "Try: 'environment --help' for more information."
+	esac
+	shift
+done
