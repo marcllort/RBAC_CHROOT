@@ -1,6 +1,6 @@
 #!/bin/bash
 
-user=$rol
+user=$1
 rol=$2
 
 JAIL=/users/$rol/$user
@@ -128,9 +128,10 @@ EOF
 
 function creaEnviroment()
 {
+    #mkdir -p /users/$rol/$user/home/$user
     mkdir -p /users/$rol/$user/
-    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr,bin}
-    mknod -m 666 /users/$rol/$user/dev/null c rol 3
+    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,bin}
+    mknod -m 666 /users/$rol/$user/dev/null c 1 3
 
     cd /users/$rol/$user/etc
     cp /etc/ld.so.cache .
@@ -144,9 +145,14 @@ function creaEnviroment()
 
     cp -r /lib /users/$rol/$user/
     
+    if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
+        echo "Copying skel files..."
+        mkdir -p /users/$rol/$user/home/
+        cp -r /etc/skel /users/$rol/$user/home/$user
+    fi
 
     chown root.root /users/$rol/$user/
-	chown $user: /users/$rol/home/$user
+	chown $user: /users/$rol/$user/home/$user
 
 
     case "$rol" in
@@ -184,7 +190,8 @@ function creaEnviroment()
 
 
 creaEnviroment
-if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
-			echo "Copying skel files..."
-			cp -r /etc/skel /users/$rol/$user/home/$user
-fi
+
+
+chroot /users/$rol/$user/
+
+#cd /home/$user

@@ -15,9 +15,9 @@ function creaUser()
 		echo "User already exists!"
 	else
 		
-		useradd -G $rol $user -d /$user/home/$user
+		useradd -G $rol $user -d /home/$user
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
-		
+		mkdir -p /users/$rol/$user/
 	fi
 	
 }
@@ -27,6 +27,22 @@ function creaUser()
 function remove()
 {
 	case $1 in
+		userenviroment)
+			echo "Deleting enviroment..."
+			userdel $user
+			
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+				rm -rf /users/$rol/$user
+				echo "User deleted"
+			else
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+			fi
+			;;
 
 		userhome)
 			echo "Deleting home..."
