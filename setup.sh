@@ -17,21 +17,21 @@ cat <<EOT >> datastore
 EOT
 
 cat <<EOT >> visitor
-bash,touch,mkdir,rm
+bash,touch,mkdir,rm,ls,vim,nano
 /etc/skel
 1 day
 1 day
 EOT
 
 cat <<EOT >> basic
-gcc,make, kill
+bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill
 /etc/skel
 1 day
 persistent
 EOT
 
 cat <<EOT >> medium
-java,ln,ps,python,pip,valgrind,grep,awk,sed
+bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python,pip,valgrind,grep,awk,sed
 /etc/skel
 1 day
 persistent
@@ -40,7 +40,7 @@ EOT
 #cal afegir dos mes al advanced
 
 cat <<EOT >> advanced
-chmod,chown,strace,chroot
+bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python,pip,valgrind,grep,awk,sed,chmod,chown,strace,chroot
 /etc/skel
 persistent
 persistent

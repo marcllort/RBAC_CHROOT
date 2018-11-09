@@ -33,7 +33,8 @@ function remove()
 			
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
-				rm -rf /users/$rol/$user
+				cd /users/$rol/$user
+				rm -rf !home
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."

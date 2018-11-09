@@ -6,6 +6,45 @@ rol=$2
 JAIL=/users/$rol/$user
 JAIL_BIN=$JAIL/bin/
 
+arrayProgrames=0
+direccioBashrc=0
+tempsEntorn="connexio"
+tempsHome="persistent"
+
+function llegeixConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                echo "Linia: $line"
+                IFS=',' read -r -a arrayProgrames <<< "$line"
+                for element in "${arrayProgrames[@]}"
+                do
+                    echo "$element"
+                done
+                ;;
+            1)
+                direccioBashrc="$line"
+                echo "Direccio: $line"
+                ;;
+            2)
+                tempsEntorn="$line"
+                echo "Temps Entorn: $line"
+                ;;
+            3)
+                tempsHome="$line"
+                echo "Temps home: $line"
+                ;;
+            *)  
+                
+                ;;   
+        esac
+        i=$((i+1))
+
+    done < "/users/config/$rol"
+}
+
 function copy_binary()
 {
 	BINARY=$(which $1)
@@ -63,6 +102,100 @@ function actualitzaDades() #en teoria ja no caldra
 
 }
 
+function copiaProgrames()
+{
+    for element in "${arrayProgrames[@]}"
+    do
+        copy_binary "$element"
+    done
+}
+
+
+
+function limitatempsEntorn()
+{
+    if [ "$tempsEntorn" != "persistent" ]; then
+cat <<EOF | at now + $tempsHome
+bash rbac -r $user $rol userenviroment
+EOF
+    fi
+    if [ "$tempsEntorn" != "connexio" ]; then
+        bash rbac -r $user $rol userenviroment
+    fi
+}
+    
+
+
+function limitatempsHome()
+{
+    if [ "$tempsHome" != "persistent" ]; then
+cat <<EOF | at now + $tempsHome 
+bash rbac -r $user $rol userhome
+EOF
+    fi
+}
+
+function creaEnviroment()
+{
+    #mkdir -p /users/$rol/$user/home/$user
+    mkdir -p /users/$rol/$user/
+    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,bin}
+    mknod -m 666 /users/$rol/$user/dev/null c 1 3
+
+    cd /users/$rol/$user/etc
+    cp /etc/ld.so.cache .
+    cp /etc/ld.so.conf .
+    cp /etc/nsswitch.conf .
+    cp /etc/passwd .
+    cp /etc/group .
+    cp /etc/shadow .
+    cp /etc/hosts .
+    cp /etc/resolv.conf .
+
+    cp -r /lib /users/$rol/$user/
+    
+    if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
+        echo "Copying skel files..."
+        mkdir -p /users/$rol/$user/home/
+        cp -r $direccioBashrc /users/$rol/$user/home/$user
+    fi
+
+    chown root.root /users/$rol/$user/
+	chown $user: /users/$rol/$user/home/$user
+
+
+    case "$rol" in
+        datastore)
+            limitatempsEntorn
+            limitatempsHome
+            ;;
+         
+        *)
+            copiaProgrames
+            limitatempsEntorn
+            limitatempsHome
+ 
+	esac
+
+}
+
+llegeixConfig
+
+creaEnviroment
+
+
+chroot /users/$rol/$user/
+
+#cd /home/$user
+
+
+
+
+
+
+
+
+
 function visitor()
 {
 	copy_binary bash
@@ -118,80 +251,3 @@ function advanced()
 	#copy_binary
 	#copy_binary
 }
-
-function limitatemps()
-{
-cat <<EOF | at midnight 
-bash sudo rbac -r $user $rol $1
-EOF
-}
-
-function creaEnviroment()
-{
-    #mkdir -p /users/$rol/$user/home/$user
-    mkdir -p /users/$rol/$user/
-    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,bin}
-    mknod -m 666 /users/$rol/$user/dev/null c 1 3
-
-    cd /users/$rol/$user/etc
-    cp /etc/ld.so.cache .
-    cp /etc/ld.so.conf .
-    cp /etc/nsswitch.conf .
-    cp /etc/passwd .
-    cp /etc/group .
-    cp /etc/shadow .
-    cp /etc/hosts .
-    cp /etc/resolv.conf .
-
-    cp -r /lib /users/$rol/$user/
-    
-    if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
-        echo "Copying skel files..."
-        mkdir -p /users/$rol/$user/home/
-        cp -r /etc/skel /users/$rol/$user/home/$user
-    fi
-
-    chown root.root /users/$rol/$user/
-	chown $user: /users/$rol/$user/home/$user
-
-
-    case "$rol" in
-        datastore)
-            limitatemps userhome
-            ;;
-         
-        visitor)
-            visitor
-            limitatemps userhome
-            ;;
-         
-        basic)
-            basic
-            limitatemps
-            ;;
-
-        medium)
-            medium
-            limitatemps
-            ;;
-
-        advanced)
-            advanced
-            
-            ;;
-         
-        *)
-            echo $"$rol : No es un tipus d'usuari"
-            exit 1
- 
-	esac
-
-}
-
-
-creaEnviroment
-
-
-chroot /users/$rol/$user/
-
-#cd /home/$user
