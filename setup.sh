@@ -6,6 +6,7 @@ groupadd basic
 groupadd medium
 groupadd advanced
 
+rm -rf /users/config
 mkdir -p /users/config
 cd /users/config
 
