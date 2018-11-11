@@ -11,6 +11,8 @@ direccioBashrc=0
 tempsEntorn="connexio"
 tempsHome="persistent"
 
+
+
 function llegeixConfig()
 {
     i=0

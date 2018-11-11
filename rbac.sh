@@ -18,6 +18,9 @@ function creaUser()
 		useradd -G $rol $user -d /home/$user
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
 		mkdir -p /users/$rol/$user/
+		#cp /users/config/enviroment /users/$rol/$user/
+		#cp /users/config/rbac /users/$rol/$user/
+
 	fi
 	
 }

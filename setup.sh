@@ -1,5 +1,28 @@
 #!/bin/bash
 
+function creaDaemon()
+{
+systemctl stop dimoniRoot
+systemctl disable dimoniRoot
+rm /lib/systemd/system/dimoniRoot.service
+systemctl daemon-reload
+systemctl reset-failed
+
+cat <<EOT >> /lib/systemd/system/dimoniRoot.service
+[Unit]
+Description=daemon root service
+[Service]
+Type=simple
+ExecStart=/users/config/enviroment visitor2 visitor
+TimeoutStartSec=00
+[Install]
+WantedBy=dafault.target
+EOT
+
+systemctl start dimoniRoot
+systemctl enable dimoniRoot
+}
+#User=root
 groupadd datastore
 groupadd visitor
 groupadd basic
@@ -46,4 +69,10 @@ bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python,pip,valgrind,gre
 persistent
 persistent
 EOT
+cp /home/marcllort/enviroment .
+chmod 777 enviroment
 
+creaDaemon
+
+#systemctl start dimoniRoot
+#systemctl enable dimoniRoot
