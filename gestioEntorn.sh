@@ -81,7 +81,7 @@ function llegeixDirConfig()
                 ;;
         esac
         i=$((i+1))
-    done < "$CONFIGBASE/config"
+    done < "$CONFIGBASE/configuracio"
 }
 
 function llegeixConfig()
@@ -111,14 +111,15 @@ function list {
 }
 
 function requestCommnad {
-	echo "request"
+	echo "Sending mail to: $MAIL"
 
 }
 
 
-CONFIGBASE=/$rol
+CONFIGBASE=/
 MAIL=0
-echo "$MAIL"
+
+llegeixDirConfig
 
 user="$(whoami)"
 

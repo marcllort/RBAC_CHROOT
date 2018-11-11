@@ -236,15 +236,18 @@ function creaEnviroment()
 
     cp -r /lib /users/$rol/$user/
 
-    cp $CONFIG/$rol /users/$rol/$user/
-    cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
-    cp $CONFIGBASE/config /users/$rol/$user/home/$user
+    
+    
     
     if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
         echo "Copying skel files..."
         mkdir -p /users/$rol/$user/home/
         cp -r $direccioBashrc /users/$rol/$user/home/$user
     fi
+
+    cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
+    cp $CONFIG/$rol /users/$rol/$user/
+    cp $CONFIGBASE/configuracio /users/$rol/$user/
 
     chown root.root /users/$rol/$user/
 	chown $user: /users/$rol/$user/home/$user
