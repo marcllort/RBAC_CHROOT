@@ -63,6 +63,27 @@ function reset {
 	echo "reset"
 }
 
+
+function llegeixDirConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                CONFIG="$line"
+                ;;
+
+            1)
+                MAIL="$line"
+                ;;
+
+            *)
+                ;;
+        esac
+        i=$((i+1))
+    done < "$CONFIGBASE/config"
+}
+
 function llegeixConfig()
 {
     i=0
@@ -94,6 +115,10 @@ function requestCommnad {
 
 }
 
+
+CONFIGBASE=/$rol
+MAIL=0
+echo "$MAIL"
 
 user="$(whoami)"
 

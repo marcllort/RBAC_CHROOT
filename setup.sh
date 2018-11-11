@@ -25,6 +25,7 @@ EOT
 
 function creaConfigs()
 {
+    cd /users/config
 cat <<EOT >> datastore
 
 /etc/skel
@@ -63,6 +64,14 @@ persistent
 EOT
 }
 
+function creaFitxerBase()
+{
+    cd /users
+cat <<EOT >> configuracio
+/users/config
+marc.llort@students.salleurl.edu
+EOT
+} 
 
 
 groupadd datastore
@@ -73,18 +82,15 @@ groupadd advanced
 
 rm -rf /users/config
 mkdir -p /users/config
-cd /users/config
 
-
-
-
-
-
+creaFitxerBase
 creaConfigs
 cp /home/marcllort/enviroment .
 chmod 777 enviroment
 
 creaDaemon
+
+echo "Cal insertar a /users/config els scripts gestioEntorn i enviroment!"
 
 #systemctl start dimoniRoot
 #systemctl enable dimoniRoot

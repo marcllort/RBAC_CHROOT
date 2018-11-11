@@ -5,6 +5,8 @@ rol=$2
 
 JAIL=/users/$rol/$user
 JAIL_BIN=$JAIL/bin/
+CONFIG=/users/config
+CONFIGBASE=/users
 
 arrayProgrames=0
 direccioBashrc=0
@@ -67,6 +69,26 @@ function remove()
 	esac
 }
 
+function llegeixDirConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                CONFIG="$line"
+                ;;
+
+            1)
+                MAIL="$line"
+                ;;
+
+            *)
+                ;;
+        esac
+        i=$((i+1))
+    done < "$CONFIGBASE/configuracio"
+}
+
 function llegeixConfig()
 {
     i=0
@@ -98,7 +120,7 @@ function llegeixConfig()
         esac
         i=$((i+1))
 
-    done < "/users/config/$rol"
+    done < "$CONFIG/$rol"
 }
 
 function copy_binary()
@@ -214,7 +236,9 @@ function creaEnviroment()
 
     cp -r /lib /users/$rol/$user/
 
-    cp /users/config/$rol /users/$rol/$user/
+    cp $CONFIG/$rol /users/$rol/$user/
+    cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
+    cp $CONFIGBASE/config /users/$rol/$user/home/$user
     
     if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
         echo "Copying skel files..."
@@ -253,6 +277,7 @@ then
 
     remove $user $function
 else
+    llegeixDirConfig    
     llegeixConfig
     creaEnviroment
     chroot /users/$rol/$user/
