@@ -99,7 +99,7 @@ function help {
 
 if [ $# -lt 1 ]
 then
-	"Missing operand. Try: 'rbac --help' for more information."
+	echo "Missing operand. Try: 'rbac --help' for more information."
 fi
 
 case "$function" in

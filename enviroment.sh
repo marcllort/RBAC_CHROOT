@@ -11,7 +11,61 @@ direccioBashrc=0
 tempsEntorn="connexio"
 tempsHome="persistent"
 
+function remove()
+{
+	case $1 in
+		userenviroment)
+			echo "Deleting enviroment..."
+			userdel $user
+			
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+				cd /users/$rol/$user
+				rm -rf !home
+				echo "User deleted"
+			else
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+			fi
+			;;
 
+		userhome)
+			echo "Deleting home..."
+			userdel $user
+			
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+				rm -rf /users/$rol/$user/home/$user
+				echo "User deleted"
+			else
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+			fi
+			;;
+
+		*)
+			echo "Deleting user..."
+			userdel $user
+			funciona=$?
+			if [ $funciona -eq 0 ]; then
+				echo "User deleted"
+			else
+				echo "User is logged in. After he logs out, user will be deleted."
+				direccio="$(locate $user | head -n 1)"
+				updatedb
+				echo "La direccio de user es: $direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+			fi
+			;;
+		
+	esac
+}
 
 function llegeixConfig()
 {
@@ -105,14 +159,20 @@ function actualitzaDades() #en teoria ja no caldra
 }
 
 function copiaProgrames()
-{
+{   
+    copy_binary whoami
+    copy_binary groups
+	copy_binary vi
+	copy_binary cat
+	copy_binary clear
+	copy_binary rm
+	copy_binary rmdir
+    
     for element in "${arrayProgrames[@]}"
     do
         copy_binary "$element"
     done
 }
-
-
 
 function limitatempsEntorn()
 {
@@ -126,8 +186,6 @@ EOF
     fi
 }
     
-
-
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
@@ -155,6 +213,8 @@ function creaEnviroment()
     cp /etc/resolv.conf .
 
     cp -r /lib /users/$rol/$user/
+
+    cp /users/config/$rol /users/$rol/$user/
     
     if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
         echo "Copying skel files..."
@@ -181,75 +241,25 @@ function creaEnviroment()
 
 }
 
-llegeixConfig
-
-creaEnviroment
-
-
-chroot /users/$rol/$user/
-
-#cd /home/$user
 
 
 
 
 
+if [ "$1" = "remove" ]
+then
+    user="$2"
+    function="$3"
+
+    remove $user $function
+else
+    llegeixConfig
+    creaEnviroment
+    chroot /users/$rol/$user/
+fi
 
 
 
 
-function visitor()
-{
-	copy_binary bash
-	copy_binary touch
-	copy_binary mkdir
-	copy_binary rm
-	#cd va sol
-	copy_binary ls
-	copy_binary vim
-	copy_binary nano
 
-	#en teoria no shan de posar pero no crec q passi res
-	copy_binary whoami
-	copy_binary vi
-	copy_binary cat
-	copy_binary clear
-	copy_binary rm
-	copy_binary rmdir
-}
 
-function basic()
-{
-	visitor
-
-	copy_binary gcc
-	copy_binary make
-	copy_binary kill
-}
-
-function medium()
-{
-	basic
-
-	copy_binary java
-	copy_binary ln
-	copy_binary ps
-	copy_binary python
-	copy_binary	pip #pip3 tmb?
-	copy_binary valgrind
-	copy_binary grep
-	copy_binary awk
-	copy_binary sed
-}
-
-function advanced()
-{			#cal posar 2 comandes mes, les que creguem
-	medium
-
-	copy_binary chmod
-	copy_binary chown
-	copy_binary strace
-	copy_binary chroot
-	#copy_binary
-	#copy_binary
-}

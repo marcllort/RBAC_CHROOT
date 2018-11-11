@@ -13,26 +13,18 @@ cat <<EOT >> /lib/systemd/system/dimoniRoot.service
 Description=daemon root service
 [Service]
 Type=simple
-ExecStart=/users/config/enviroment visitor2 visitor
-TimeoutStartSec=00
+ExecStart=/usr/bin/enviroment visitor2 visitor
 [Install]
-WantedBy=dafault.target
+WantedBy=multi-user.target
 EOT
 
-systemctl start dimoniRoot
-systemctl enable dimoniRoot
+#systemctl daemon-reload
+#systemctl start dimoniRoot
+#systemctl enable dimoniRoot
 }
-#User=root
-groupadd datastore
-groupadd visitor
-groupadd basic
-groupadd medium
-groupadd advanced
 
-rm -rf /users/config
-mkdir -p /users/config
-cd /users/config
-
+function creaConfigs()
+{
 cat <<EOT >> datastore
 
 /etc/skel
@@ -69,6 +61,26 @@ bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python,pip,valgrind,gre
 persistent
 persistent
 EOT
+}
+
+
+
+groupadd datastore
+groupadd visitor
+groupadd basic
+groupadd medium
+groupadd advanced
+
+rm -rf /users/config
+mkdir -p /users/config
+cd /users/config
+
+
+
+
+
+
+creaConfigs
 cp /home/marcllort/enviroment .
 chmod 777 enviroment
 
