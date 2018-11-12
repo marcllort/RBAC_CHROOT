@@ -23,11 +23,12 @@ function creaUser()
 		mkdir -p /users/$rol/$user/home/$user/.ssh
 		chown visitor2 /users/visitor/visitor2/home/visitor2/.ssh
 		chmod 755 /users/visitor/visitor2/home/visitor2/.ssh
+
 		#ssh-keygen -t rsa -b 2048 -f ~/.ssh/$user-key -P "$CONTRA"
 		runuser -l $user -s /bin/sh ssh-keygen -t rsa -b 2048 -f /users/$rol/$user/home/$user/.ssh/$user-key -P "prova"
 
-		
-		sudo runuser -l visitor2 -s /bin/sh -c 'ssh-keygen -b 2048 -f /users/visitor/visitor2/home/visitor2/.ssh/visitor2-key -P "prova"'
+
+		#sudo runuser -l visitor2 -s /bin/sh -c 'ssh-keygen -b 2048 -f /users/visitor/visitor2/home/visitor2/.ssh/visitor2-key -P "prova"'
 		#cp /users/config/enviroment /users/$rol/$user/
 		#cp /users/config/rbac /users/$rol/$user/
 

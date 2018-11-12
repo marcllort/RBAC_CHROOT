@@ -176,7 +176,7 @@ function actualitzaDades() #en teoria ja no caldra
     cp /etc/hosts .
     cp /etc/resolv.conf .
 
-	chmod 700 /users/$rol/$user/home/*
+	chmod 755 /users/$rol/$user/home/*
 
 }
 
@@ -246,11 +246,17 @@ function creaEnviroment()
     
     
     
-    if [ ! -d /users/$rol/$user/home/$user ]; then          #pel cas on no s'aguanta el home
-        echo "Copying skel files..."
-        mkdir -p /users/$rol/$user/home/
-        cp -r $direccioBashrc /users/$rol/$user/home/$user
+    if [ -d /users/$rol/$user/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
+        cp -r /users/$rol/$user/home/$user/.ssh /users/$rol/$user
+        mkdir -p /users/$rol/$user/.ssh
+        rm -rf /users/$rol/$user/home
     fi
+
+    echo "Copying skel files..."
+    mkdir -p /users/$rol/$user/home/
+    cp -r $direccioBashrc /users/$rol/$user/home/$user
+    cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
+    chown $user: /users/$rol/$user/home/$user/.* !ssh
 
     cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
     cp $CONFIG/$rol /users/$rol/$user/
