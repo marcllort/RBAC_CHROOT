@@ -16,8 +16,18 @@ function creaUser()
 	else
 		
 		useradd -G $rol $user -d /home/$user
+
+		CONTRA=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 15 | head -n 1)
+
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
-		mkdir -p /users/$rol/$user/
+		mkdir -p /users/$rol/$user/home/$user/.ssh
+		chown visitor2 /users/visitor/visitor2/home/visitor2/.ssh
+		chmod 755 /users/visitor/visitor2/home/visitor2/.ssh
+		#ssh-keygen -t rsa -b 2048 -f ~/.ssh/$user-key -P "$CONTRA"
+		runuser -l $user -s /bin/sh ssh-keygen -t rsa -b 2048 -f /users/$rol/$user/home/$user/.ssh/$user-key -P "prova"
+
+		
+		sudo runuser -l visitor2 -s /bin/sh -c 'ssh-keygen -b 2048 -f /users/visitor/visitor2/home/visitor2/.ssh/visitor2-key -P "prova"'
 		#cp /users/config/enviroment /users/$rol/$user/
 		#cp /users/config/rbac /users/$rol/$user/
 
@@ -44,7 +54,7 @@ function remove()
 				direccio="$(locate $user | head -n 1)"
 				updatedb
 				echo "La direccio de user es: $direccio/.bash_logout"
-				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio !home" >> "$direccio/.bash_logout"
 			fi
 			;;
 

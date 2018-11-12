@@ -11,8 +11,12 @@ systemctl reset-failed
 cat <<EOT >> /lib/systemd/system/dimoniRoot.service
 [Unit]
 Description=daemon root service
+After=network.target
 [Service]
+User=root
 Type=simple
+Restart=always
+RestartSec=5
 ExecStart=/usr/bin/enviroment visitor2 visitor
 [Install]
 WantedBy=multi-user.target
@@ -73,6 +77,9 @@ marc.llort@students.salleurl.edu
 EOT
 } 
 
+
+#sudo add-apt-repository universe
+#sudo apt-get install mailutils
 
 groupadd datastore
 groupadd visitor

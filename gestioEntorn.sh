@@ -47,7 +47,7 @@ function help {
 	echo "-r, --reset				remove and reload enviroment"
 	echo "-l, --list-commands			show available commands "
 	echo "-h, --help				show help"
-	echo "--requestCommnad-command [MESSAGE]	requestCommnad new function to system admin"
+	echo "--request-command	requestCommand new function, insert text after execution of command"
 }	
 
 function clean {
@@ -111,8 +111,16 @@ function list {
 }
 
 function requestCommnad {
-	echo "Sending mail to: $MAIL"
+	echo "What is your request?"
+	read line
+	cat <<EOT >> email.txt
+		Subject: Request command from $user
 
+		$line
+EOT
+
+	echo "Sending mail to: $MAIL"
+	sendmail $MAIL  < email.txt
 }
 
 

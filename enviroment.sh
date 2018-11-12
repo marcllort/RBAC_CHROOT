@@ -30,7 +30,7 @@ function remove()
 				direccio="$(locate $user | head -n 1)"
 				updatedb
 				echo "La direccio de user es: $direccio/.bash_logout"
-				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+				echo "userdel $user && rm -rf $direccio !home" >> "$direccio/.bash_logout"
 			fi
 			;;
 
@@ -182,6 +182,9 @@ function actualitzaDades() #en teoria ja no caldra
 
 function copiaProgrames()
 {   
+    mkdir -p $JAIL/home/$user>/mail/inbox/{tmp,new,cur}
+    chmod -R 700 $JAIL/home/$user>/mail
+
     copy_binary whoami
     copy_binary groups
 	copy_binary vi
@@ -189,11 +192,15 @@ function copiaProgrames()
 	copy_binary clear
 	copy_binary rm
 	copy_binary rmdir
+    copy_binary mutt
     
     for element in "${arrayProgrames[@]}"
     do
         copy_binary "$element"
     done
+
+
+    
 }
 
 function limitatempsEntorn()
@@ -204,7 +211,7 @@ bash rbac -r $user $rol userenviroment
 EOF
     fi
     if [ "$tempsEntorn" != "connexio" ]; then
-        bash rbac -r $user $rol userenviroment
+        echo "userdel $user && rm -rf /users/$rol/$user !home" >> "/users/$rol/$user/.bash_logout"
     fi
 }
     
@@ -221,7 +228,7 @@ function creaEnviroment()
 {
     #mkdir -p /users/$rol/$user/home/$user
     mkdir -p /users/$rol/$user/
-    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,bin}
+    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
     mknod -m 666 /users/$rol/$user/dev/null c 1 3
 
     cd /users/$rol/$user/etc
@@ -285,9 +292,3 @@ else
     creaEnviroment
     chroot /users/$rol/$user/
 fi
-
-
-
-
-
-
