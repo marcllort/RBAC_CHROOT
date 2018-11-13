@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function creaDaemon()
+function creaDaemonEntorn()
 {
 systemctl stop dimoniRoot
 systemctl disable dimoniRoot
@@ -23,8 +23,35 @@ WantedBy=multi-user.target
 EOT
 
 #systemctl daemon-reload
-#systemctl start dimoniRoot
-#systemctl enable dimoniRoot
+systemctl start dimoniRoot
+systemctl enable dimoniRoot
+}
+
+function creaDaemonMail()
+{
+systemctl stop dimoniMail
+systemctl disable dimoniMail
+rm /lib/systemd/system/dimoniMail.service
+systemctl daemon-reload
+systemctl reset-failed
+
+cat <<EOT >> /lib/systemd/system/dimoniMail.service
+[Unit]
+Description=daemon mail service
+After=network.target
+[Service]
+User=root
+Type=simple
+Restart=always
+RestartSec=5
+ExecStart=/users/config/repMail.sh
+[Install]
+WantedBy=multi-user.target
+EOT
+
+#systemctl daemon-reload
+systemctl start dimoniMail
+systemctl enable dimoniMail
 }
 
 function creaConfigs()
@@ -73,7 +100,7 @@ function creaFitxerBase()
     cd /users
 cat <<EOT >> configuracio
 /users/config
-marc.llort@students.salleurl.edu
+mac12llm@gmail.com
 EOT
 } 
 
@@ -99,11 +126,19 @@ cp /home/marcllort/escolta.sh /users/config/
 chmod 755 /users/config/escolta.sh
 cp /home/marcllort/envia.sh /users/config/
 chmod 755 /users/config/envia.sh
+cp /home/marcllort/repMail.sh /users/config/
+chmod 755 /users/config/repMail.sh
+cp /home/marcllort/gestioEntorn /users/config/
+chmod 755 /users/config/gestioEntorn
+cp /home/marcllort/enviroment /users/config/
+chmod 755 /users/config/enviroment
 
 
-creaDaemon
 
-echo "Cal insertar a /users/config els scripts gestioEntorn i enviroment!"
+creaDaemonEntorn
+creaDaemonMail
+
+#echo "Cal insertar a /users/config els scripts gestioEntorn i enviroment!"
 
 #systemctl start dimoniRoot
 #systemctl enable dimoniRoot

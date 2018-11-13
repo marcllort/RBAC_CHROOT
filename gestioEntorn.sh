@@ -64,25 +64,6 @@ function reset {
 }
 
 
-function llegeixDirConfig()
-{
-    i=0
-    while read -r line; do
-        case "$i" in
-            0)
-                CONFIG="$line"
-                ;;
-
-            1)
-                MAIL="$line"
-                ;;
-
-            *)
-                ;;
-        esac
-        i=$((i+1))
-    done < "$CONFIGBASE/configuracio"
-}
 
 function llegeixConfig()
 {
@@ -113,21 +94,9 @@ function list {
 function requestCommnad {
 	echo "What is your request?"
 	read line
-	cat <<EOT >> email.txt
-		Subject: Request command from $user
-
-		$line
-EOT
-
-	echo "Sending mail to: $MAIL"
-	sendmail $MAIL  < email.txt
+	echo "Subject: Request from $user /n $line" | netcat localhost 5555 -w0 
 }
 
-
-CONFIGBASE=/
-MAIL=0
-
-llegeixDirConfig
 
 user="$(whoami)"
 

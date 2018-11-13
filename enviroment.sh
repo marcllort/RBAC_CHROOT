@@ -192,7 +192,7 @@ function copiaProgrames()
 	copy_binary clear
 	copy_binary rm
 	copy_binary rmdir
-    copy_binary mutt
+    copy_binary netcat
     
     for element in "${arrayProgrames[@]}"
     do
@@ -264,7 +264,7 @@ function creaEnviroment()
 
     chown root.root /users/$rol/$user/
 	chown $user: /users/$rol/$user/home/$user
-
+    chmod 755 /users/$rol/$user/home/$user/gestioEntorn
 
     case "$rol" in
         datastore)
