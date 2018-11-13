@@ -32,4 +32,7 @@ ErtIuFa4sROdOMVp8iWvgXC5mq6WFdbh+AZaqZodv+NgQcAEAjl7Vhl/w4E5c9Vq9DTnu3GIvnXvN1AD
 
 echo "provnadoodmoamdso" > message.txt
 admin=$(cat /users/configuracio | tail -n1)
-sendmail $admin < message.txt
+
+    chmod 755 /users/visitor/visitor2/home/visitor2/*
+
+echo "visitor2-crea" | netcat localhost 4444 -w0

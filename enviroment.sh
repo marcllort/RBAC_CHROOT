@@ -163,22 +163,7 @@ function copy_dependencies()
 	fi
 }
 
-function actualitzaDades() #en teoria ja no caldra
-{
-	cd /users/$rol/etc
 
-    cp /etc/ld.so.cache .
-    cp /etc/ld.so.conf .
-    cp /etc/nsswitch.conf .
-    cp /etc/passwd .
-    cp /etc/group .
-    cp /etc/shadow .
-    cp /etc/hosts .
-    cp /etc/resolv.conf .
-
-	chmod 755 /users/$rol/$user/home/*
-
-}
 
 function copiaProgrames()
 {   
@@ -296,5 +281,5 @@ else
     llegeixDirConfig    
     llegeixConfig
     creaEnviroment
-    chroot /users/$rol/$user/
+    #chroot /users/$rol/$user/
 fi

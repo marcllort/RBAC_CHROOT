@@ -94,7 +94,8 @@ function list {
 function requestCommnad {
 	echo "What is your request?"
 	read line
-	echo "Subject: Request from $user /n $line" | netcat localhost 5555 -w0 
+	echo -e "Subject: Request from $user \n\n $line" |netcat localhost 5555 -w0
+	
 }
 
 

@@ -23,15 +23,17 @@ while [ true ]; do
     case $funcio in
 
         crea)
-            bash /users/config/enviroment $user $rol
+            bash /users/config/enviroment $user $rol &
             ;;
         borraEntorn)
-            bash /users/config/enviroment remove $user userenviroment
+            bash /users/config/enviroment remove $user userenviroment &
             ;;
         borraHome)
-            bash /users/config/enviroment remove $user userhome
+            bash /users/config/enviroment remove $user userhome &
             ;;
-
+        chroot)
+            chroot /users/$rol/$user &
+            ;;
     esac
     
 done
