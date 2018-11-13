@@ -2,22 +2,26 @@
 while [ true ]; do
     comanda=$(netcat -l 4444)
     
-
     #tractem els parametres rebuts
 
-    IFS='$' read -r -a arrayParamentres <<< "$comanda"
+    IFS='-' read -r -a arrayParametres <<< "$comanda"
     
-    user="${arrayProgrames[0]}"
-    funcio="${arrayProgrames[1]}"
-    grups="$(groups $user)"
+    user="${arrayParametres[0]}"
+    funcio="${arrayParametres[1]}"
+    fraseGroups="groups $user"
+    grups="$($fraseGroups)"
     array=( $grups )
-    rol="${array[1]}"
+    rol="${array[3]}"
 
 
-    echo "User: $comanda, Rol: $rol, Funcio: $funcio"
+    #echo "User: $user, Rol: $rol, Funcio: $funcio"
 
     #rebo si vol crear o borrar, i nom dusuari, faig groups per saber el seu rol, i faig la comanda enviroment
-    case $funcio
+
+
+    #CAL ENVIAR AL BACKGROUND AMB & AL FINAL DE LA FUNCIO
+    case $funcio in
+
         crea)
             bash /users/config/enviroment $user $rol
             ;;

@@ -256,7 +256,7 @@ function creaEnviroment()
     mkdir -p /users/$rol/$user/home/
     cp -r $direccioBashrc /users/$rol/$user/home/$user
     cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
-    chown $user: /users/$rol/$user/home/$user/.* !ssh
+    chown $user: /users/$rol/$user/home/$user/.* ! ssh
 
     cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
     cp $CONFIG/$rol /users/$rol/$user/

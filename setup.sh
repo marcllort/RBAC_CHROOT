@@ -17,7 +17,7 @@ User=root
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/escolta.sh
+ExecStart=/users/config/escolta.sh
 [Install]
 WantedBy=multi-user.target
 EOT
@@ -94,6 +94,12 @@ creaFitxerBase
 creaConfigs
 cp /home/marcllort/enviroment .
 chmod 777 enviroment
+
+cp /home/marcllort/escolta.sh /users/config/
+chmod 755 /users/config/escolta.sh
+cp /home/marcllort/envia.sh /users/config/
+chmod 755 /users/config/envia.sh
+
 
 creaDaemon
 
