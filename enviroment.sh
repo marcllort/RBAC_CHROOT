@@ -203,7 +203,7 @@ function copiaProgrames()
     
 }
 
-function limitatempsEntorn()
+function limitatempsEntorn() #DIMONIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
 {
     if [ "$tempsEntorn" != "persistent" ]; then
 cat <<EOF | at now + $tempsHome

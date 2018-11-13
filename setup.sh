@@ -17,7 +17,7 @@ User=root
 Type=simple
 Restart=always
 RestartSec=5
-ExecStart=/usr/bin/enviroment visitor2 visitor
+ExecStart=/usr/bin/escolta.sh
 [Install]
 WantedBy=multi-user.target
 EOT
