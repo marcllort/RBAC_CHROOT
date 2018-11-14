@@ -4,6 +4,7 @@ user=$1
 rol=$2
 
 JAIL=/users/$rol/$user
+
 JAIL_BIN=$JAIL/bin/
 CONFIG=/users/config
 CONFIGBASE=/users
@@ -15,22 +16,20 @@ tempsHome="persistent"
 
 function remove()
 {
-	case $1 in
+	case $2 in
 		userenviroment)
 			echo "Deleting enviroment..."
 			userdel $user
 			
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
-				cd /users/$rol/$user
+				cd $JAIL
 				rm -rf !home
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-				direccio="$(locate $user | head -n 1)"
-				updatedb
-				echo "La direccio de user es: $direccio/.bash_logout"
-				echo "userdel $user && rm -rf $direccio !home" >> "$direccio/.bash_logout"
+				
+				echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
 
@@ -40,14 +39,14 @@ function remove()
 			
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
-				rm -rf /users/$rol/$user/home/$user
+				rm -rf $JAIL/home/$user
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-				direccio="$(locate $user | head -n 1)"
-				updatedb
-				echo "La direccio de user es: $direccio/.bash_logout"
-				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+				#direccio="$(locate $user | head -n 1)"
+				#updatedb
+				#echo "La direccio de user es: $direccio/.bash_logout"
+				echo "bash envia.sh borraHome" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
 
@@ -59,10 +58,7 @@ function remove()
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-				direccio="$(locate $user | head -n 1)"
-				updatedb
-				echo "La direccio de user es: $direccio/.bash_logout"
-				echo "userdel $user && rm -rf $direccio" >> "$direccio/.bash_logout"
+				
 			fi
 			;;
 		
@@ -188,35 +184,32 @@ function copiaProgrames()
     
 }
 
-function limitatempsEntorn() #DIMONIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+function limitatempsEntorn() 
 {
     if [ "$tempsEntorn" != "persistent" ]; then
-cat <<EOF | at now + $tempsHome
-bash rbac -r $user $rol userenviroment
-EOF
+        bash envia.sh "borraEntorn" | at 00:00 AM today + $tempsEntorn
     fi
+
     if [ "$tempsEntorn" != "connexio" ]; then
-        echo "userdel $user && rm -rf /users/$rol/$user !home" >> "/users/$rol/$user/.bash_logout"
+        echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
     fi
 }
     
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
-cat <<EOF | at now + $tempsHome 
-bash rbac -r $user $rol userhome
-EOF
+        bash rbac -r $user $rol userhome | at 00:00 AM today + $tempsHome
     fi
 }
 
 function creaEnviroment()
 {
-    #mkdir -p /users/$rol/$user/home/$user
-    mkdir -p /users/$rol/$user/
-    mkdir -p /users/$rol/$user/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
-    mknod -m 666 /users/$rol/$user/dev/null c 1 3
+    #mkdir -p $JAIL/home/$user
+    mkdir -p $JAIL/
+    mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
+    mknod -m 666 $JAIL/dev/null c 1 3
 
-    cd /users/$rol/$user/etc
+    cd $JAIL/etc
     cp /etc/ld.so.cache .
     cp /etc/ld.so.conf .
     cp /etc/nsswitch.conf .
@@ -226,35 +219,39 @@ function creaEnviroment()
     cp /etc/hosts .
     cp /etc/resolv.conf .
 
-    cp -r /lib /users/$rol/$user/
+    cp -r /lib $JAIL/
 
     
     
     
-    #if [ -d /users/$rol/$user/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
-     #   cp -r /users/$rol/$user/home/$user/.ssh /users/$rol/$user
-      #  mkdir -p /users/$rol/$user/.ssh
-       # rm -rf /users/$rol/$user/home
+    #if [ -d $JAIL/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
+     #   cp -r $JAIL/home/$user/.ssh $JAIL
+      #  mkdir -p $JAIL/.ssh
+       # rm -rf $JAIL/home
     #fi
 
     #echo "Copying skel files..."
-    #mkdir -p /users/$rol/$user/home/
-    #cp -r $direccioBashrc /users/$rol/$user/home/$user
-    #cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
-    #chown $user: /users/$rol/$user/home/$user/.* ! ssh
+    #mkdir -p $JAIL/home/
+    #cp -r $direccioBashrc $JAIL/home/$user
+    #cp -r $JAIL/.ssh $JAIL/home/$user
+    #chown $user: $JAIL/home/$user/.* ! ssh
 
-    cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
-    cp $CONFIG/$rol /users/$rol/$user/
-    cp $CONFIGBASE/configuracio /users/$rol/$user/
+    cp $CONFIG/gestioEntorn $JAIL/home/$user
+    cp $CONFIG/$rol $JAIL/
+    cp $CONFIGBASE/configuracio $JAIL/
 
-    chown root.root /users/$rol/$user/
-	chown $user: /users/$rol/$user/home/$user
-    chmod 755 /users/$rol/$user/home/$user/gestioEntorn
+    chown root.root $JAIL/
+	chown $user: $JAIL/home/$user
+    chmod 755 $JAIL/home/$user/gestioEntorn
 
     case "$rol" in
         datastore)
             limitatempsEntorn
             limitatempsHome
+            ;;
+        
+        advanced)
+            copiaProgrames
             ;;
          
         *)
@@ -269,18 +266,30 @@ function creaEnviroment()
 
 
 
-
-
-if [ "$1" = "remove" ]
+if [ -f "$JAIL/configuracio" ]
 then
-    user="$2"
-    function="$3"
-
-    remove $user $function
+	echo "Loading existing environment..."
 else
-    llegeixDirConfig    
-    llegeixConfig
-    creaEnviroment
+	
+	
+    if [ "$1" = "remove" ]
+    then
+        user="$2"
+        function="$3"
+        fraseGroups="groups $user"
+        grups="$($fraseGroups)"
+        array=( $grups )
+        rol="${array[3]}"
+        echo "Deleting environment... USER: $user - $rol function: $function"
 
-    #chroot --userspec=$user:$rol /users/$rol/$user/
+
+        remove $user $function
+    else
+        echo "Creating environment..."
+        llegeixDirConfig    
+        llegeixConfig
+        creaEnviroment
+
+        #chroot --userspec=$user:$rol $JAIL/
+    fi
 fi

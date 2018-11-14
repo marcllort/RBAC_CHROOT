@@ -100,7 +100,6 @@ function requestCommnad {
 
 
 user="$(whoami)"
-
 grups="$(groups)"
 array=( $grups )
 rol="${array[1]}"

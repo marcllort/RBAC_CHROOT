@@ -36,3 +36,11 @@ admin=$(cat /users/configuracio | tail -n1)
     chmod 755 /users/visitor/visitor2/home/visitor2/*
 
 echo "visitor2-crea" | netcat localhost 4444 -w0
+
+
+
+
+JAIL=/users/$rol/$user
+
+
+echo "visitor2-crea" |netcat localhost 4444 -w0

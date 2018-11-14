@@ -58,6 +58,7 @@ systemctl enable dimoniMail
 function creaConfigs()
 {
     cd /users/config
+    
 cat <<EOT >> datastore
 
 /etc/skel

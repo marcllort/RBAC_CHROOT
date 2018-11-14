@@ -26,13 +26,12 @@ while [ true ]; do
             bash /users/config/enviroment $user $rol &
             ;;
         borraEntorn)
+            sleep 2
             bash /users/config/enviroment remove $user userenviroment &
             ;;
         borraHome)
+            sleep 2
             bash /users/config/enviroment remove $user userhome &
-            ;;
-        chroot)
-            chroot --userspec=$user:$rol /users/$rol/$user /bin/bash &
             ;;
     esac
     
