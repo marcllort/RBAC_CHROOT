@@ -1,8 +1,8 @@
 #!/bin/bash
 
+
 user=$1
 rol=$2
-
 JAIL=/users/$rol/$user
 
 JAIL_BIN=$JAIL/bin/
@@ -16,7 +16,8 @@ tempsHome="persistent"
 
 function remove()
 {
-	case $2 in
+    JAIL=/users/$rol/$user
+	case $function in
 		userenviroment)
 			echo "Deleting enviroment..."
 			userdel $user
@@ -268,6 +269,7 @@ function creaEnviroment()
 
 if [ -f "$JAIL/configuracio" ]
 then
+    echo "$JAIL/configuracio"
 	echo "Loading existing environment..."
 else
 	
@@ -283,8 +285,10 @@ else
         echo "Deleting environment... USER: $user - $rol function: $function"
 
 
-        remove $user $function
+        remove
     else
+        user=$1
+        rol=$2
         echo "Creating environment..."
         llegeixDirConfig    
         llegeixConfig

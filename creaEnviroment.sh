@@ -44,3 +44,12 @@ JAIL=/users/$rol/$user
 
 
 echo "visitor2-crea" |netcat localhost 4444 -w0
+
+
+
+
+#fer servir pam per execurtar amb root i varibales de entor
+
+#amb el bash logut simplement cal matar el proces de bin bash de lusuari
+
+#
