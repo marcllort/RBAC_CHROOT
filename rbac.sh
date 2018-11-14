@@ -6,6 +6,90 @@
 function=$1
 rol=$3
 user=$2
+direccioBashrc=0
+
+
+
+JAIL=/users/$rol/$user
+JAIL_BIN=$JAIL/bin/
+CONFIG=/users/config
+
+
+function llegeixConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                echo "Linia: $line"
+                IFS=',' read -r -a arrayProgrames <<< "$line"
+                for element in "${arrayProgrames[@]}"
+                do
+                    echo "$element"
+                done
+                ;;
+            1)
+                direccioBashrc="$line"
+                echo "Direccio: $line"
+                ;;
+            2)
+                tempsEntorn="$line"
+                echo "Temps Entorn: $line"
+                ;;
+            3)
+                tempsHome="$line"
+                echo "Temps home: $line"
+                ;;
+            *)  
+                
+                ;;   
+        esac
+        i=$((i+1))
+
+    done < "$CONFIG/$rol"
+}
+
+
+
+function copy_binary()
+{
+	BINARY=$(which $1)
+
+	cp $BINARY $JAIL/$BINARY
+
+	copy_dependencies $BINARY
+}
+
+function copy_dependencies()
+{
+	# http://www.cyberciti.biz/files/lighttpd/l2chroot.txt
+
+	FILES="$(ldd $1 | awk '{ print $3 }' |egrep -v ^'\(')"
+
+	echo "Copying shared files/libs to $JAIL..."
+
+	for i in $FILES
+	do
+		d="$(dirname $i)"
+
+		[ ! -d $JAIL$d ] && mkdir -p $JAIL$d || :
+
+		/bin/cp $i $JAIL$d
+	done
+
+	sldl="$(ldd $1 | grep 'ld-linux' | awk '{ print $1}')"
+
+	# now get sub-dir
+	sldlsubdir="$(dirname $sldl)"
+
+	if [ ! -f $JAIL$sldl ];
+	then
+		echo "Copying $sldl $JAIL$sldlsubdir..."
+		/bin/cp $sldl $JAIL$sldlsubdir
+	else
+		:
+	fi
+}
 
 
 function creaUser()
@@ -20,15 +104,53 @@ function creaUser()
 		CONTRA=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 15 | head -n 1)
 
 		echo "$user:contra" | sudo chpasswd      #cal fer KEY
+		
+		mkdir -p /users/$rol/$user/home
+		cp -r $direccioBashrc /users/$rol/$user/home/$user
+		ls -a /users/$rol/$user/home/$user
+
 		mkdir -p /users/$rol/$user/home/$user/.ssh
 		mkdir -p /users/$rol/$user/bin
+		mkdir -p /users/$rol/$user/lib
+		mkdir -p /users/$rol/$user/lib64
+
+
+
 
 		cp -r /bin/sh /users/$rol/$user/bin
 		cp -r /bin/bash /users/$rol/$user/bin
+		cp -r /lib /users/$rol/$user/
+		cp -r /lib64 /users/$rol/$user/
+		
 
+		#cp -r $direccioBashrc /users/$rol/$user/home/$user
+		cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
+		chown $user: /users/$rol/$user/home/$user/.* ! ssh
+
+		mkdir -p /users/$rol/$user/{etc,usr/bin}
+
+		cp -r /usr/bin/whoami /users/$rol/$user/usr/bin/
+
+		copy_binary netcat
+
+
+		cd /users/$rol/$user/etc
+		cp /etc/ld.so.cache .
+		cp /etc/ld.so.conf .
+		cp /etc/nsswitch.conf .
+		cp /etc/passwd .
+		cp /etc/group .
+		cp /etc/shadow .
+		cp /etc/hosts .
+		cp /etc/resolv.conf .
+
+		chown $user: /users/$rol/$user/home/$user
 
 		chown visitor2 /users/visitor/visitor2/home/visitor2/.ssh
 		chmod 755 /users/visitor/visitor2/home/visitor2/.ssh
+
+		cp /home/marcllort/envia.sh /users/$rol/$user/home/$user
+		chmod 755 /users/$rol/$user/home/$user/envia.sh
 
 		#ssh-keygen -t rsa -b 2048 -f ~/.ssh/$user-key -P "$CONTRA"
 		runuser -l $user -s /bin/sh 'ssh-keygen -t rsa -b 2048 -f /users/$rol/$user/home/$user/.ssh/$user-key -P "prova"'
@@ -122,6 +244,7 @@ fi
 case "$function" in
 
 	"-a" | "--add")
+		llegeixConfig
 		creaUser
 		;;
 	"-r" | "--remove")

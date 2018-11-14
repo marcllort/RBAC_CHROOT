@@ -13,7 +13,6 @@ cat <<EOT >> /lib/systemd/system/dimoniRoot.service
 Description=daemon root service
 After=network.target
 [Service]
-User=root
 Type=simple
 Restart=always
 RestartSec=5
@@ -26,6 +25,8 @@ EOT
 systemctl start dimoniRoot
 systemctl enable dimoniRoot
 }
+
+
 
 function creaDaemonMail()
 {

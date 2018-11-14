@@ -168,7 +168,7 @@ function copy_dependencies()
 function copiaProgrames()
 {   
     mkdir -p $JAIL/home/$user>/mail/inbox/{tmp,new,cur}
-    chmod -R 700 $JAIL/home/$user>/mail
+    chmod -R 755 $JAIL/home/$user>/mail
 
     copy_binary whoami
     copy_binary groups
@@ -231,17 +231,17 @@ function creaEnviroment()
     
     
     
-    if [ -d /users/$rol/$user/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
-        cp -r /users/$rol/$user/home/$user/.ssh /users/$rol/$user
-        mkdir -p /users/$rol/$user/.ssh
-        rm -rf /users/$rol/$user/home
-    fi
+    #if [ -d /users/$rol/$user/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
+     #   cp -r /users/$rol/$user/home/$user/.ssh /users/$rol/$user
+      #  mkdir -p /users/$rol/$user/.ssh
+       # rm -rf /users/$rol/$user/home
+    #fi
 
-    echo "Copying skel files..."
-    mkdir -p /users/$rol/$user/home/
-    cp -r $direccioBashrc /users/$rol/$user/home/$user
-    cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
-    chown $user: /users/$rol/$user/home/$user/.* ! ssh
+    #echo "Copying skel files..."
+    #mkdir -p /users/$rol/$user/home/
+    #cp -r $direccioBashrc /users/$rol/$user/home/$user
+    #cp -r /users/$rol/$user/.ssh /users/$rol/$user/home/$user
+    #chown $user: /users/$rol/$user/home/$user/.* ! ssh
 
     cp $CONFIG/gestioEntorn /users/$rol/$user/home/$user
     cp $CONFIG/$rol /users/$rol/$user/
@@ -281,5 +281,6 @@ else
     llegeixDirConfig    
     llegeixConfig
     creaEnviroment
-    #chroot /users/$rol/$user/
+
+    #chroot --userspec=$user:$rol /users/$rol/$user/
 fi

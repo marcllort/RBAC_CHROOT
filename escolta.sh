@@ -32,7 +32,7 @@ while [ true ]; do
             bash /users/config/enviroment remove $user userhome &
             ;;
         chroot)
-            chroot /users/$rol/$user &
+            chroot --userspec=$user:$rol /users/$rol/$user /bin/bash &
             ;;
     esac
     
