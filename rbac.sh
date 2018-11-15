@@ -152,6 +152,9 @@ function creaUser()
 		cp /home/marcllort/envia.sh /users/$rol/$user/home/$user
 		chmod 755 /users/$rol/$user/home/$user/envia.sh
 
+		cp $CONFIG/$rol $JAIL/
+
+
 		#ssh-keygen -t rsa -b 2048 -f ~/.ssh/$user-key -P "$CONTRA"
 		runuser -l $user -s /bin/sh 'ssh-keygen -t rsa -b 2048 -f /users/$rol/$user/home/$user/.ssh/$user-key -P "prova"'
 

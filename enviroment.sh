@@ -4,7 +4,6 @@
 user=$1
 rol=$2
 JAIL=/users/$rol/$user
-
 JAIL_BIN=$JAIL/bin/
 CONFIG=/users/config
 CONFIGBASE=/users
@@ -264,36 +263,63 @@ function creaEnviroment()
 
 }
 
+function enviroment(){
+    user="$1"
+    fraseGroups="groups $user"
+    grups="$($fraseGroups)"
+    array=( $grups )
+    rol="${array[3]}"
+    JAIL=/users/$rol/$user
+    JAIL_BIN=$JAIL/bin/
 
 
 
-if [ -f "$JAIL/configuracio" ]
-then
-    echo "$JAIL/configuracio"
-	echo "Loading existing environment..."
-else
-	
-	
-    if [ "$1" = "remove" ]
+    if [ -f "$JAIL/configuracio" ]
     then
-        user="$2"
-        function="$3"
-        fraseGroups="groups $user"
-        grups="$($fraseGroups)"
-        array=( $grups )
-        rol="${array[3]}"
-        echo "Deleting environment... USER: $user - $rol function: $function"
-
-
-        remove
+        echo "$JAIL/configuracio"
+        echo "Loading existing environment..."
     else
-        user=$1
-        rol=$2
-        echo "Creating environment..."
-        llegeixDirConfig    
-        llegeixConfig
-        creaEnviroment
+        
+        
+        if [ "$1" = "remove" ]
+        then
+            user="$2"
+            function="$3"
+            fraseGroups="groups $user"
+            grups="$($fraseGroups)"
+            array=( $grups )
+            rol="${array[3]}"
+            echo "Deleting environment... USER: $user - $rol function: $function"
 
-        #chroot --userspec=$user:$rol $JAIL/
+            JAIL=/users/$rol/$user
+            JAIL_BIN=$JAIL/bin/
+
+            remove
+        else
+            user="$1"
+            fraseGroups="groups $user"
+            grups="$($fraseGroups)"
+            array=( $grups )
+            rol="${array[3]}"
+            echo "Creating environment... USER: $user - $rol"
+
+            JAIL=/users/$rol/$user
+            JAIL_BIN=$JAIL/bin/
+
+            llegeixDirConfig    
+            llegeixConfig
+            creaEnviroment
+
+            #chroot --userspec=$user:$rol $JAIL/
+        fi
     fi
+}
+
+
+if [ "$PAM_USER" = "marcllort" ]
+then
+  /bin/bash
+else
+  enviroment $PAM_USER
 fi
+exit 0

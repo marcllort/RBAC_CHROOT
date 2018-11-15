@@ -52,4 +52,8 @@ echo "visitor2-crea" |netcat localhost 4444 -w0
 
 #amb el bash logut simplement cal matar el proces de bin bash de lusuari
 
-#
+#/etc/pam.d/sshd posar session optional pam_exec.so /bin/bash /users/config/enviroment $PAM-USER
+mirar les variables que te pam. Enviroment a dins haura de mirar ell sol quin es el seu rol etc..
+IMPORTA LA POSICIO
+
+auth [default=ignore] pam_exec.so bash /users/config/enviroment $PAM_USER

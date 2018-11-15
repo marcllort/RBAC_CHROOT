@@ -23,7 +23,7 @@ while [ true ]; do
     case $funcio in
 
         crea)
-            bash /users/config/enviroment $user $rol &
+            #bash /users/config/enviroment $user $rol &
             ;;
         borraEntorn)
             sleep 2
