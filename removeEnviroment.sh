@@ -1,7 +1,7 @@
-
 #!/bin/bash
 
 
+#FUNCIONS
 
 function remove()
 {
@@ -47,8 +47,7 @@ function remove()
 			if [ $funciona -eq 0 ]; then
 				echo "User deleted"
 			else
-				echo "User is logged in. After he logs out, user will be deleted."
-				
+				echo "User is logged in."
 			fi
 			;;
 		
@@ -56,18 +55,29 @@ function remove()
 }
 
 
+
+#CONSTANTS
+
+user="$2"
+function="$3"
+
+fraseGroups="groups $user"
+grups="$($fraseGroups)"
+array=( $grups )
+
+rol="${array[3]}"
+
+JAIL=/users/$rol/$user
+JAIL_BIN=$JAIL/bin/
+
+
+#SCRIPT
+
 if [ "$1" = "remove" ]
 then
-    user="$2"
-    function="$3"
-    fraseGroups="groups $user"
-    grups="$($fraseGroups)"
-    array=( $grups )
-    rol="${array[3]}"
+
     echo "Deleting environment... USER: $user - $rol function: $function"
 
-    JAIL=/users/$rol/$user
-    JAIL_BIN=$JAIL/bin/
-
     remove
+
 fi

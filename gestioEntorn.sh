@@ -1,6 +1,28 @@
 #!/bin/bash
 
 
+#FUNCIONS
+
+function llegeixConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                IFS=',' read -r -a arrayProgrames <<< "$line"
+                for element in "${arrayProgrames[@]}"
+                do
+                    echo "$element"
+                done
+                ;;
+            *)  
+                exit
+                ;;   
+        esac
+        i=$((i+1))
+
+    done < "/$rol"
+}
 
 function confirma {
 	read -p "Continue (Y/N)? " option
@@ -40,16 +62,6 @@ function confirmaUser {
 
 }
 
-function help {
-	echo "Usage: gestioEntorn [COMMAND]"
-	echo -e "Manage enviroment.\n"
-	echo "-c, --clean-all				remove enviroment and home"
-	echo "-r, --reset				remove and reload enviroment"
-	echo "-l, --list-commands			show available commands "
-	echo "-h, --help				show help"
-	echo "--request-command	requestCommand new function, insert text after execution of command"
-}	
-
 function clean {
 	function="userhome"
 	confirma
@@ -63,48 +75,40 @@ function reset {
 	echo "reset"
 }
 
-
-
-function llegeixConfig()
-{
-    i=0
-    while read -r line; do
-        case "$i" in
-            0)
-                IFS=',' read -r -a arrayProgrames <<< "$line"
-                for element in "${arrayProgrames[@]}"
-                do
-                    echo "$element"
-                done
-                ;;
-            *)  
-                exit
-                ;;   
-        esac
-        i=$((i+1))
-
-    done < "/$rol"
-}
-
 function list {
 	llegeixConfig
-	echo "list"
 }
 
 function requestCommnad {
+
 	echo "What is your request?"
 	read line
 	echo -e "Subject: Request from $user \n\n $line" |netcat localhost 5555 -w0
 	
 }
 
+function help {
+	echo "Usage: gestioEntorn [COMMAND]"
+	echo -e "Manage enviroment.\n"
+	echo "-c, --clean-all				remove enviroment and home"
+	echo "-r, --reset				remove and reload enviroment"
+	echo "-l, --list-commands			show available commands "
+	echo "-h, --help				show help"
+	echo "--request-command	requestCommand new function, insert text after execution of command"
+}	
+
+
+
+#CONSTANTS
 
 user="$(whoami)"
 grups="$(groups)"
 array=( $grups )
 rol="${array[1]}"
 
-echo "User: $user	Group: $rol"
+
+
+#SCRIPT
 
 if [ $# -lt 1 ]
 then

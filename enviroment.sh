@@ -1,19 +1,7 @@
 #!/bin/bash
 
 
-user=$1
-rol=$2
-JAIL=/users/$rol/$user
-JAIL_BIN=$JAIL/bin/
-CONFIG=/users/config
-CONFIGBASE=/users
-
-arrayProgrames=0
-direccioBashrc=0
-tempsEntorn="connexio"
-tempsHome="persistent"
-
-
+#FUNCIONS
 
 function llegeixDirConfig()
 {
@@ -41,27 +29,18 @@ function llegeixConfig()
     while read -r line; do
         case "$i" in
             0)
-                echo "Linia: $line"
                 IFS=',' read -r -a arrayProgrames <<< "$line"
-                for element in "${arrayProgrames[@]}"
-                do
-                    echo "$element"
-                done
                 ;;
             1)
                 direccioBashrc="$line"
-                echo "Direccio: $line"
                 ;;
             2)
                 tempsEntorn="$line"
-                echo "Temps Entorn: $line"
                 ;;
             3)
                 tempsHome="$line"
-                echo "Temps home: $line"
                 ;;
             *)  
-                
                 ;;   
         esac
         i=$((i+1))
@@ -110,12 +89,9 @@ function copy_dependencies()
 }
 
 
-
 function copiaProgrames()
-{   
-    mkdir -p $JAIL/home/$user>/mail/inbox/{tmp,new,cur}
-    chmod -R 755 $JAIL/home/$user>/mail
-
+{
+    #Fitxers que cal copiar sempre
     copy_binary whoami
     copy_binary groups
 	copy_binary vi
@@ -125,24 +101,29 @@ function copiaProgrames()
 	copy_binary rmdir
     copy_binary netcat
     
+    #Fitxers segons el rol
     for element in "${arrayProgrames[@]}"
     do
         copy_binary "$element"
     done
-
-
-    
 }
 
 function limitatempsEntorn() 
 {
-    if [ "$tempsEntorn" != "persistent" ]; then
-        bash envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
-    fi
+    case "$tempsEntorn" in
 
-    if [ "$tempsEntorn" = "connexio" ]; then
-        echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
-    fi
+        persistent)
+            ;;
+
+        connexio)
+            echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
+            ;;
+
+        *)
+            bash envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
+            ;;
+
+    esac
 }
     
 function limitatempsHome()
@@ -152,9 +133,9 @@ function limitatempsHome()
     fi
 }
 
-function creaEnviroment()
+function copiaFitxers()
 {
-    #mkdir -p $JAIL/home/$user
+
     mkdir -p $JAIL/
     mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
     mknod -m 666 $JAIL/dev/null c 1 3
@@ -169,22 +150,11 @@ function creaEnviroment()
     cp /etc/hosts .
     cp /etc/resolv.conf .
 
+    cp -r /bin/sh $JAIL/bin
+    cp -r /bin/bash $JAIL/bin
     cp -r /lib $JAIL/
-
+    cp -r /lib64 $JAIL/
     
-    
-    
-    #if [ -d $JAIL/home/$user/.ssh ]; then          #pel cas on no s'aguanta el home
-     #   cp -r $JAIL/home/$user/.ssh $JAIL
-      #  mkdir -p $JAIL/.ssh
-       # rm -rf $JAIL/home
-    #fi
-
-    #echo "Copying skel files..."
-    #mkdir -p $JAIL/home/
-    #cp -r $direccioBashrc $JAIL/home/$user
-    #cp -r $JAIL/.ssh $JAIL/home/$user
-    #chown $user: $JAIL/home/$user/.* ! ssh
 
     cp $CONFIG/gestioEntorn $JAIL/home/$user
     cp $CONFIG/$rol $JAIL/
@@ -193,6 +163,13 @@ function creaEnviroment()
     chown root.root $JAIL/
 	chown $user: $JAIL/home/$user
     chmod 755 $JAIL/home/$user/gestioEntorn
+
+}
+
+function creaEnviroment()
+{
+
+    copiaFitxers
 
     case "$rol" in
         datastore)
@@ -213,43 +190,53 @@ function creaEnviroment()
 
 }
 
-function enviroment(){
-    user="$1"
-    fraseGroups="groups $user"
-    grups="$($fraseGroups)"
-    array=( $grups )
-    rol="${array[3]}"
-    JAIL=/users/$rol/$user
-    JAIL_BIN=$JAIL/bin/
-
-
-
-    if [ ! -f "$JAIL/configuracio" ]
+function enviroment()
+{
+    if [ ! -f "$JAIL/configuracio" ]        #si no esta configuracio, entorn no existeix i cal crearlo
     then
         
-        user="$1"
-        fraseGroups="groups $user"
-        grups="$($fraseGroups)"
-        array=( $grups )
-        rol="${array[3]}"
         echo "Creating environment... USER: $user - $rol"
-
-        JAIL=/users/$rol/$user
-        JAIL_BIN=$JAIL/bin/
 
         llegeixDirConfig    
         llegeixConfig
+
         creaEnviroment
 
     fi
 }
 
 
-if [ "$PAM_USER" = "marcllort" ]
+#CONSTANTS
+
+
+user="$PAM_USER"
+
+fraseGroups="groups $user"      #Comandes per definir el rol
+grups="$($fraseGroups)"
+array=( $grups )
+
+rol="${array[3]}"
+
+JAIL=/users/$rol/$user
+JAIL_BIN=$JAIL/bin/
+
+CONFIG=/users/config
+CONFIGBASE=/users
+
+arrayProgrames=0
+direccioBashrc=0
+tempsEntorn="connexio"
+tempsHome="persistent"
+
+
+
+#SCRIPT
+
+if [ "$PAM_USER" = "marcllort" ]        #per poderme connectar per ssh jo sense carregar enviroment
 then
-  /bin/bash
+    /bin/bash
 else
     echo "Funcio enviroment"
-    enviroment $PAM_USER
+    enviroment
 fi
 exit 0
