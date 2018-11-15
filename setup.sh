@@ -134,6 +134,8 @@ cp /home/marcllort/gestioEntorn /users/config/
 chmod 755 /users/config/gestioEntorn
 cp /home/marcllort/enviroment /users/config/
 chmod 755 /users/config/enviroment
+cp /home/marcllort/removeEnviroment /users/config/
+chmod 755 /users/config/removeEnviroment
 
 
 

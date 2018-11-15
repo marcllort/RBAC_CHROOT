@@ -20,18 +20,23 @@ while [ true ]; do
 
 
     #CAL ENVIAR AL BACKGROUND AMB & AL FINAL DE LA FUNCIO
+
+    echo "FUNCIO: $funcio"
     case $funcio in
 
-        crea)
-            #bash /users/config/enviroment $user $rol &
+        borraEntornCon)
+            #Mata proces bin bash de user i fa el bash
+            bash /users/config/removeEnviroment remove $user userenviroment &
+            ;;
+        borraHomeCon)
+            #Mata proces bin bash de user i fa el bash
+            bash /users/config/removeEnviroment remove $user userhome &
             ;;
         borraEntorn)
-            sleep 2
-            bash /users/config/enviroment remove $user userenviroment &
+            bash /users/config/removeEnviroment remove $user userenviroment &
             ;;
         borraHome)
-            sleep 2
-            bash /users/config/enviroment remove $user userhome &
+            bash /users/config/removeEnviroment remove $user userhome &
             ;;
     esac
     

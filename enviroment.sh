@@ -187,10 +187,10 @@ function copiaProgrames()
 function limitatempsEntorn() 
 {
     if [ "$tempsEntorn" != "persistent" ]; then
-        bash envia.sh "borraEntorn" | at 00:00 AM today + $tempsEntorn
+        bash envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
     fi
 
-    if [ "$tempsEntorn" != "connexio" ]; then
+    if [ "$tempsEntorn" = "connexio" ]; then
         echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
     fi
 }
@@ -198,7 +198,7 @@ function limitatempsEntorn()
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
-        bash rbac -r $user $rol userhome | at 00:00 AM today + $tempsHome
+        bash envia.sh borraHome | at 00:00 AM today + $tempsHome
     fi
 }
 
@@ -274,44 +274,23 @@ function enviroment(){
 
 
 
-    if [ -f "$JAIL/configuracio" ]
+    if [ ! -f "$JAIL/configuracio" ]
     then
-        echo "$JAIL/configuracio"
-        echo "Loading existing environment..."
-    else
         
-        
-        if [ "$1" = "remove" ]
-        then
-            user="$2"
-            function="$3"
-            fraseGroups="groups $user"
-            grups="$($fraseGroups)"
-            array=( $grups )
-            rol="${array[3]}"
-            echo "Deleting environment... USER: $user - $rol function: $function"
+        user="$1"
+        fraseGroups="groups $user"
+        grups="$($fraseGroups)"
+        array=( $grups )
+        rol="${array[3]}"
+        echo "Creating environment... USER: $user - $rol"
 
-            JAIL=/users/$rol/$user
-            JAIL_BIN=$JAIL/bin/
+        JAIL=/users/$rol/$user
+        JAIL_BIN=$JAIL/bin/
 
-            remove
-        else
-            user="$1"
-            fraseGroups="groups $user"
-            grups="$($fraseGroups)"
-            array=( $grups )
-            rol="${array[3]}"
-            echo "Creating environment... USER: $user - $rol"
+        llegeixDirConfig    
+        llegeixConfig
+        creaEnviroment
 
-            JAIL=/users/$rol/$user
-            JAIL_BIN=$JAIL/bin/
-
-            llegeixDirConfig    
-            llegeixConfig
-            creaEnviroment
-
-            #chroot --userspec=$user:$rol $JAIL/
-        fi
     fi
 }
 
@@ -320,6 +299,7 @@ if [ "$PAM_USER" = "marcllort" ]
 then
   /bin/bash
 else
-  enviroment $PAM_USER
+    echo "Funcio enviroment"
+    enviroment $PAM_USER
 fi
 exit 0

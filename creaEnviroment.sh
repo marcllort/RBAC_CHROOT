@@ -35,17 +35,21 @@ admin=$(cat /users/configuracio | tail -n1)
 
     chmod 755 /users/visitor/visitor2/home/visitor2/*
 
-echo "visitor2-crea" | netcat localhost 4444 -w0
+echo "$(whoami)-$1" | netcat localhost 4444 -w0
 
+echo "$(whoami)-borraEntorn" | netcat localhost 4444 -w0
 
 
 
 JAIL=/users/$rol/$user
 
 
-echo "visitor2-crea" |netcat localhost 4444 -w0
+echo "crea" |netcat localhost 4444 -w0
 
 
+netcat 127.0.0.1 4444 -w0<<END
+$(whoami)-$1
+END
 
 
 #fer servir pam per execurtar amb root i varibales de entor
