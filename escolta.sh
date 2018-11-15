@@ -26,10 +26,12 @@ while [ true ]; do
 
         borraEntornCon)
             #Mata proces bin bash de user i fa el bash
+            pkill -U $user
             bash /users/config/removeEnviroment remove $user userenviroment &
             ;;
         borraHomeCon)
             #Mata proces bin bash de user i fa el bash
+            pkill -U $user
             bash /users/config/removeEnviroment remove $user userhome &
             ;;
         borraEntorn)
