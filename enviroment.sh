@@ -116,7 +116,7 @@ function limitatempsEntorn()
             ;;
 
         connexio)
-            echo "bash envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
+            echo "bash envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
             ;;
 
         *)
