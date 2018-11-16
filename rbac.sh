@@ -55,8 +55,9 @@ function creaUser()
 		chmod 755 $JAIL/home/$user/.ssh			#prova
 
 		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
-		#ssh-keygen -t rsa -b 2048 -f ~/.ssh/$user-key -P "$CONTRA"
-		#sudo runuser -l visitor2 -s /bin/sh -c 'ssh-keygen -b 2048 -f /users/visitor/visitor2/home/visitor2/.ssh/visitor2-key -P "prova"'
+		chmod 755 "$JAIL/home/$user/.ssh/$user-key"
+		
+		
 
 		#Donem propietat del home al usuari
 		chown $user: $JAIL/home/$user
