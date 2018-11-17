@@ -144,8 +144,6 @@ Match group medium
         ChrootDirectory /users/medium/%u/
         PubkeyAuthentication yes
         AuthenticationMethods publickey,keyboard-interactive
-#       AuthorizedKeysFile  /users/medium/%u/home/%u/.ssh/authorized_keys
-
 
 Match group advanced
         ChrootDirectory /users/advanced/%u/
