@@ -25,20 +25,13 @@ function llegeixConfig()
 }
 
 function confirma {
-	read -p "Continue (Y/N)? " option
+	read -p "Are you sure? (Y/N)? " option
 	case "$option" in
 		y|Y ) 
-			echo "yes"
-			if [ "$function" = "userenviroment" ];
-			then
-				echo "remove $function"
-				#enviroment remove $user $function
-				echo "creaEnviroment" #cal cridar dimoni de crear envirmoment
-				#environment $user $rol
-			fi
+			
 			;;
 		n|N ) 
-			echo "no"
+			
 			exit
 			;;
 		* ) 
@@ -70,9 +63,8 @@ function clean {
 }
 
 function reset {
-	function="userenviroment"
 	confirma
-	echo "reset"
+	bash /home/$user/.envia.sh reset
 }
 
 function list {

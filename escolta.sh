@@ -24,11 +24,10 @@ while [ true ]; do
 
     echo "FUNCIO: $funcio"
     case $funcio in
-
-        borraEntornCon)
-            #Mata proces bin bash de user i fa el bash
-            pkill -U $user
-            bash /users/config/removeEnviroment remove $user userenviroment &
+        reset)
+            bash /users/config/removeEnviroment remove $user userenviroment
+            
+            bash /users/config/enviroment "$user" &
             ;;
         borraHomeCon)
             #Mata proces bin bash de user i fa el bash

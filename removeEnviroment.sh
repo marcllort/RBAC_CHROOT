@@ -10,17 +10,11 @@ function remove()
 		userenviroment)
 			echo "Deleting enviroment..."
 			#userdel $user
-			who | grep "$user"
-			funciona=$?
-			if [ $funciona -eq 1 ]; then
-				cd $JAIL
-				find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
-				echo "User deleted"
-			else
-				echo "User is logged in. After he logs out, user will be deleted."
-				
-				echo "bash /home/$user/.envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
-			fi
+			
+			cd $JAIL
+			find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
+			
+			
 			;;
 
 		userhome)
@@ -30,7 +24,7 @@ function remove()
 			funciona=$?
 			if [ $funciona -eq 1 ]; then
 				rm -rf $JAIL/home/$user
-				echo "User deleted"
+				
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
 				#direccio="$(locate $user | head -n 1)"

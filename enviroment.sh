@@ -246,9 +246,28 @@ tempsHome="persistent"
 
 #SCRIPT
 
-if [ "$PAM_USER" = "marcllortss" ]        #per poderme connectar per ssh jo sense carregar enviroment
+if [ "$PAM_USER" = "" ]        #per poderme connectar per ssh jo sense carregar enviroment
 then
-    /bin/bash
+    echo "NO ES PAM"
+    user=$1
+    fraseGroups="groups $user"      #Comandes per definir el rol
+    grups="$($fraseGroups)"
+    array=( $grups )
+
+    rol="${array[3]}"
+
+    JAIL=/users/$rol/$user
+    JAIL_BIN=$JAIL/bin/
+
+    CONFIG=/users/config
+    CONFIGBASE=/users
+
+    arrayProgrames=0
+    direccioBashrc=0
+    tempsEntorn="connexio"
+    tempsHome="persistent"
+    enviroment
+    echo "enviroment creat"
 else
     echo "Funcio enviroment"
     enviroment
