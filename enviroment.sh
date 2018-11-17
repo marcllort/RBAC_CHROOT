@@ -24,7 +24,18 @@ function llegeixDirConfig()
 }
 
 function llegeixConfig()
-{
+{   
+    if [ "$rol"="visitor" ]
+    then
+        IFS='_' read -r -a arrayRol <<< "$user"
+        rolNou="${arrayProgrames[0]}"
+
+        if [ -f "/users/config/$rolNou" ]
+		then
+            rol="$rolNou"
+        fi
+    fi
+
     i=0
     while read -r line; do
         case "$i" in

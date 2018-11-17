@@ -33,6 +33,56 @@ function llegeixConfig()
     done < "$CONFIG/$rol"
 }
 
+function afegeixConfig()
+{
+	cat <<EOT >> /etc/ssh/sshd_config
+	
+Match group $rol
+        ChrootDirectory /users/$rol/%u/
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey,keyboard-interactive
+EOT
+
+	systemctl restart ssh
+}
+
+
+function checkGroup()
+{
+
+	if grep -q $rol /etc/group
+	then
+		echo "Rol existent..."
+	else
+		echo "Rol NO existent..."
+		
+		if [ -f "/users/config/$rol" ]
+		then
+			echo "Vols crear aquest rol? Respon amb 'y' o 'n'"
+			read resposta
+
+			case "$resposta" in
+				y|Y)
+					groupadd "$rol"
+					#cal afegir el match group a /etc/ssh/sshd_config
+					afegeixConfig
+					;;
+
+				n|N)
+					exit 1
+					;;
+
+				*)
+					echo "La resposta no es possible, respon amb 'y' o 'n'"
+
+			esac
+		else
+			exit 1
+		fi
+
+	fi
+
+}
 
 function creaUser()
 {
@@ -41,9 +91,7 @@ function creaUser()
 		echo "User already exists!"
 	else
 		
-		useradd -G $rol $user -d /home/$user
-		#echo "$user:contra" | sudo chpasswd      #Cal fer key sense passphrase ni password
-		
+		useradd -G $rol $user -d /home/$user		
 
 
 		#Poso skel a la home
@@ -57,8 +105,6 @@ function creaUser()
 		chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
 		chmod 755 $JAIL/home/$user/.ssh			#prova
 
-		#runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
-		#chmod 755 "$JAIL/home/$user/.ssh/$user-key"
 		
 
 		#Donem propietat del home al usuari
@@ -163,6 +209,7 @@ fi
 case "$function" in
 
 	"-a" | "--add")
+		checkGroup
 		llegeixConfig
 		creaUser
 		;;
