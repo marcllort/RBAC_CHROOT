@@ -42,11 +42,14 @@ function creaUser()
 	else
 		
 		useradd -G $rol $user -d /home/$user
-		echo "$user:contra" | sudo chpasswd      #Cal fer key sense passphrase ni password
+		#echo "$user:contra" | sudo chpasswd      #Cal fer key sense passphrase ni password
 		
+
+
 		#Poso skel a la home
 		mkdir -p $JAIL/home
 		cp -r $direccioBashrc $JAIL/home/$user
+	
 		
 
 		#Poso ssh a la home
@@ -54,9 +57,8 @@ function creaUser()
 		chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
 		chmod 755 $JAIL/home/$user/.ssh			#prova
 
-		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
-		chmod 755 "$JAIL/home/$user/.ssh/$user-key"
-		
+		#runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
+		#chmod 755 "$JAIL/home/$user/.ssh/$user-key"
 		
 
 		#Donem propietat del home al usuari

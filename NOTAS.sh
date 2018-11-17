@@ -19,7 +19,7 @@ Comanda= sudo fdisk /dev/sda i despres p.
 
 SSH: Afegeix la key, pero segueix demanant la contrasneya, cal afegirla al client?
 Com puc automatitzar que safegeixi sola despres de crearla, ja que si ho poso a rbac hu fa amb sudo i no marcllort
-
+https://www.youtube.com/watch?v=vpk_1gldOAE
 
 2FA= 
 Ara falla perque tinc posats metodes auotritzacio el public key i no el tinc creat
@@ -35,3 +35,4 @@ https://systemoverlord.com/2018/03/03/openssh-two-factor-authentication-but-not-
 
 https://www.techrepublic.com/article/how-to-combine-ssh-key-authentication-and-two-factor-authentication-on-linux/
 
+auth required pam_google_authenticator.so user=root allowed_perm=0666 secret=/users/config/.google_authenticator

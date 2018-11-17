@@ -118,6 +118,24 @@ function creaFitxerBase()
 EOT
 } 
 
+#Aqui posem el fitxer de google authenticator que volem fer servir
+function creaAuth()
+{
+    cd /users/config
+    cat <<EOT >> .google_authenticator
+    QNTOL4UVWHV4S4UKRNG744TK7U
+    " RATE_LIMIT 3 30 1542453539
+    " WINDOW_SIZE 17
+    " TOTP_AUTH
+    18455154
+    69946224
+    52104533
+    43050867
+    46607396
+EOT
+    chown root:root /users/config/.google_authenticator
+}
+
 
 #SCRIPT
 
@@ -129,7 +147,7 @@ groupadd medium
 groupadd advanced
 
 rm -rf /users/config
-mkdir -p /users/config
+mkdir -p /users/config/googleauth
 
 #Crea el fitxer de configuracio que te el mail i direccio
 creaFitxerBase
@@ -142,3 +160,6 @@ creaDaemonEntorn
 
 #Crea el dimoni encarregat d'enviar el mail amb el request command
 creaDaemonMail
+
+creaAuth
+

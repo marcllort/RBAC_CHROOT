@@ -33,8 +33,7 @@
 #StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10
-
-#PubkeyAuthentication yes
+#PasswordAuthentication no
 
 # Expect .ssh/authorized_keys2 to be disregarded by default in future.
 #AuthorizedKeysFile     .ssh/authorized_keys .ssh/authorized_keys2
@@ -53,12 +52,12 @@
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
+PasswordAuthentication no
 #PermitEmptyPasswords no
 
 # Change to yes to enable challenge-response passwords (beware issues with
 # some PAM modules and threads)
-ChallengeResponseAuthentication no
+ChallengeResponseAuthentication yes
 
 # Kerberos options
 #KerberosAuthentication no
@@ -124,29 +123,28 @@ Subsystem sftp internal-sftp
 #       ForceCommand cvs server
 
 
-#ForceCommand /users/config/enviroment %u visitor
 
-#ForceCommand /home/visitor2/envia.sh crea
 
 Match group datastore
         ChrootDirectory /users/datastore/%u/
-#       ForceCommand ./enviroment %u visitor
-#       ForceCommand internal-sftp
+        AuthenticationMethods keyboard-interactive
 
 Match group visitor
-#       ForceCommand /bin/bash
-#       ForceCommand /home/visitor2/envia.sh crea
-#       ForceCommand echo "funciona ugya"
         ChrootDirectory /users/visitor/%u/
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey
 
 Match group basic
         ChrootDirectory /users/basic/%u/
-#       ForceCommand ./enviroment %u basic
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey,keyboard-interactive
 
 Match group medium
         ChrootDirectory /users/medium/%u/
-#       ForceCommand ./enviroment %u medium
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey,keyboard-interactive
 
 Match group advanced
         ChrootDirectory /users/advanced/%u/
-#       ForceCommand ./enviroment %u advanced
+        PubkeyAuthentication yes
+        AuthenticationMethods publickey,keyboard-interactive
