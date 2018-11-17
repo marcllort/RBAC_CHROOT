@@ -232,11 +232,11 @@ tempsHome="persistent"
 
 #SCRIPT
 
-if [ "$PAM_USER" = "marcllort" ]        #per poderme connectar per ssh jo sense carregar enviroment
+if [ "$PAM_USER" = "marcllortss" ]        #per poderme connectar per ssh jo sense carregar enviroment
 then
     /bin/bash
 else
     echo "Funcio enviroment"
     enviroment
 fi
-exit 0
+#exit 0

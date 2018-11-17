@@ -30,7 +30,7 @@
 
 #LoginGraceTime 2m
 #PermitRootLogin prohibit-password
-#StrictModes yes
+StrictModes no
 #MaxAuthTries 6
 #MaxSessions 10
 #PasswordAuthentication no
@@ -124,6 +124,7 @@ Subsystem sftp internal-sftp
 
 
 
+AuthorizedKeysFile  /users/config/ssh/authorized_keys
 
 Match group datastore
         ChrootDirectory /users/datastore/%u/
@@ -143,6 +144,8 @@ Match group medium
         ChrootDirectory /users/medium/%u/
         PubkeyAuthentication yes
         AuthenticationMethods publickey,keyboard-interactive
+#       AuthorizedKeysFile  /users/medium/%u/home/%u/.ssh/authorized_keys
+
 
 Match group advanced
         ChrootDirectory /users/advanced/%u/
