@@ -68,8 +68,8 @@ function creaUser()
 		cp $CONFIG/$rol $JAIL/
 
 		#Posem fitxer de enviar comandes al dimoniRoot
-		cp /users/config/envia.sh $JAIL/home/$user
-		chmod 755 $JAIL/home/$user/envia.sh
+		cp /users/config/.envia.sh $JAIL/home/$user/
+		chmod 755 $JAIL/home/$user/.envia.sh
 
 	fi
 	
@@ -78,35 +78,38 @@ function creaUser()
 
 function remove()
 {
+    JAIL=/users/$rol/$user
 	case $function in
 		userenviroment)
 			echo "Deleting enviroment..."
-			userdel $user
-			
+			#userdel $user
+			who | grep "$user"
 			funciona=$?
-			if [ $funciona -eq 0 ]; then
+			if [ $funciona -eq 1 ]; then
 				cd $JAIL
-				rm -rf !home
+				find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
 				
-				echo "bash envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
+				echo "bash /home/$user/.envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
 
 		userhome)
 			echo "Deleting home..."
-			userdel $user
-			
+			#userdel $user
+			who | grep "$user"
 			funciona=$?
-			if [ $funciona -eq 0 ]; then
+			if [ $funciona -eq 1 ]; then
 				rm -rf $JAIL/home/$user
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-			
-				echo "bash envia.sh borraHomeCon" >> "$JAIL/home/$user/.bash_logout"
+				#direccio="$(locate $user | head -n 1)"
+				#updatedb
+				#echo "La direccio de user es: $direccio/.bash_logout"
+				echo "bash /home/$user/.envia.sh borraHomeCon" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
 

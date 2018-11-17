@@ -116,11 +116,11 @@ function limitatempsEntorn()
             ;;
 
         connexio)
-            echo "bash envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
+            echo "bash /home/$user/.envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
             ;;
 
         *)
-            bash envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
+            bash /home/$user/.envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
             ;;
 
     esac
@@ -129,7 +129,7 @@ function limitatempsEntorn()
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
-        bash envia.sh borraHome | at 00:00 AM today + $tempsHome
+        bash /home/$user/.envia.sh borraHome | at 00:00 AM today + $tempsHome
     fi
 }
 
@@ -155,8 +155,11 @@ function copiaFitxers()
     cp -r /lib $JAIL/
     cp -r /lib64 $JAIL/
     
+    if [ $rol != "datastore" ]
+    then
+        cp $CONFIG/gestioEntorn $JAIL/home/$user
+    fi
 
-    cp $CONFIG/gestioEntorn $JAIL/home/$user
     cp $CONFIG/$rol $JAIL/
     cp $CONFIGBASE/configuracio $JAIL/
 

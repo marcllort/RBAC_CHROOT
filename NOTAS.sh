@@ -36,3 +36,7 @@ https://systemoverlord.com/2018/03/03/openssh-two-factor-authentication-but-not-
 https://www.techrepublic.com/article/how-to-combine-ssh-key-authentication-and-two-factor-authentication-on-linux/
 
 auth required pam_google_authenticator.so user=root allowed_perm=0666 secret=/users/config/.google_authenticator
+
+
+
+find . -maxdepth 1 ! -iname home -exec rm -rf {} \;

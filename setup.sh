@@ -60,8 +60,8 @@ function creaConfigs()
     chmod 755 /users/config/enviroment
     cp /home/marcllort/escolta.sh /users/config/
     chmod 755 /users/config/escolta.sh
-    cp /home/marcllort/envia.sh /users/config/
-    chmod 755 /users/config/envia.sh
+    cp /home/marcllort/.envia.sh /users/config/
+    chmod 755 /users/config/.envia.sh
     cp /home/marcllort/repMail.sh /users/config/
     chmod 755 /users/config/repMail.sh
     cp /home/marcllort/gestioEntorn /users/config/
