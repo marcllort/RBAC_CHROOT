@@ -28,11 +28,13 @@ function llegeixConfig()
     if [ "$rol"="visitor" ]
     then
         IFS='_' read -r -a arrayRol <<< "$user"
-        rolNou="${arrayProgrames[0]}"
+        rolNou="${arrayRol[0]}"
 
         if [ -f "/users/config/$rolNou" ]
 		then
-            rol="$rolNou"
+            conf="$rolNou"
+        else
+            conf="$rol"
         fi
 
         echo "User=$user    Rol=$rol    RolNou=$rolNou"
@@ -59,7 +61,7 @@ function llegeixConfig()
         esac
         i=$((i+1))
 
-    done < "$CONFIG/$rol"
+    done < "$CONFIG/$conf"
 }
 
 function copy_binary()
@@ -130,10 +132,13 @@ function limitatempsEntorn()
             ;;
 
         connexio)
-            echo "bash /home/$user/.envia.sh borraEntornCon" >> "$JAIL/home/$user/.bash_logout"
+            #echo "echo "$user-borraEntorn" |netcat localhost 4444 -w0" >> "$JAIL/home/$user/.bash_logout"
+            echo "bash /home/$user/.envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
             ;;
 
         *)
+            #(echo "$user-borraEntorn" |netcat localhost 4444 -w0) | at 00:00 AM today + $tempsEntorn
+
             bash /home/$user/.envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
             ;;
 
@@ -143,13 +148,13 @@ function limitatempsEntorn()
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
+        #(echo "$user-borraEntorn" |netcat localhost 4444 -w0) | at 00:00 AM today + $tempsHome
         bash /home/$user/.envia.sh borraHome | at 00:00 AM today + $tempsHome
     fi
 }
 
 function copiaFitxers()
 {
-    echo "Copia fitxer rol= $rol"
     mkdir -p $JAIL/
     mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
     mknod -m 666 $JAIL/dev/null c 1 3

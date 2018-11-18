@@ -59,11 +59,15 @@ function clean {
 	function="userhome"
 	confirma
 	confirmaUser
+	#echo "$user-clean" |netcat localhost 4444 -w0
+
 	bash /home/$user/.envia.sh clean
 }
 
 function reset {
 	confirma
+	#echo "$user-reset" |netcat localhost 4444 -w0
+
 	bash /home/$user/.envia.sh reset
 }
 

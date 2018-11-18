@@ -27,9 +27,8 @@ function remove()
 				
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-				#direccio="$(locate $user | head -n 1)"
-				#updatedb
-				#echo "La direccio de user es: $direccio/.bash_logout"
+					
+				#echo "echo "$user-borraHomeCon" |netcat localhost 4444 -w0" >> "$JAIL/home/$user/.bash_logout"
 				echo "bash /home/$user/.envia.sh borraHomeCon" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
