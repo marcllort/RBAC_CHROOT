@@ -34,6 +34,9 @@ function llegeixConfig()
 		then
             rol="$rolNou"
         fi
+
+        echo "User=$user    Rol=$rol    RolNou=$rolNou"
+
     fi
 
     i=0
@@ -146,10 +149,16 @@ function limitatempsHome()
 
 function copiaFitxers()
 {
-
+    echo "Copia fitxer rol= $rol"
     mkdir -p $JAIL/
     mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
     mknod -m 666 $JAIL/dev/null c 1 3
+
+    if [ ! -f "$JAIL/home" ]
+    then
+        mkdir -p $JAIL/home
+        cp -r $direccioBashrc $JAIL/home/$user
+    fi
 
     cd $JAIL/etc
     cp /etc/ld.so.cache .

@@ -24,9 +24,15 @@ while [ true ]; do
 
     echo "FUNCIO: $funcio"
     case $funcio in
+        
+        clean)
+            pkill -U $user
+            bash /users/config/removeEnviroment remove $user userenviroment
+            bash /users/config/removeEnviroment remove $user userhome
+            #bash /users/config/enviroment "$user" &
+            ;;
         reset)
             bash /users/config/removeEnviroment remove $user userenviroment
-            
             bash /users/config/enviroment "$user" &
             ;;
         borraHomeCon)

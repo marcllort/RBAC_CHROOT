@@ -42,15 +42,15 @@ function confirma {
 }
 
 function confirmaUser {
-	read -p "Username? " username
+	read -p "Username? After typing your username you will be loged out!" username
 	if [ "$username" != "$user" ];
 	then
 		echo "gestioEntorn: invalid confirmation."
 		exit
 	else
 		#borra entorn i home i torna a crear entorn nomes?
-		echo "remove $function"
-		#enviroment remove $user $function
+		echo "Deleting user, enviroment, and home..."
+
 	fi	
 
 }
@@ -59,7 +59,7 @@ function clean {
 	function="userhome"
 	confirma
 	confirmaUser
-	echo "clean"
+	bash /home/$user/.envia.sh clean
 }
 
 function reset {
