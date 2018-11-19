@@ -1,0 +1,20 @@
+#!/bin/bash
+
+bash rbac -r data1 datastore
+bash rbac -r visitor1 visitor
+bash rbac -r basic1 basic
+bash rbac -r medium1 medium
+bash rbac -r advanced1 advanced
+
+
+rm -rf /users/
+
+bash setup "$1"
+
+echo "Segon rbac"
+
+bash rbac -a data1 datastore
+bash rbac -a visitor1 visitor
+bash rbac -a basic1 basic
+bash rbac -a medium1 medium
+bash rbac -a advanced1 advanced

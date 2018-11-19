@@ -29,7 +29,7 @@
 # Authentication:
 
 #LoginGraceTime 2m
-#PermitRootLogin prohibit-password
+PermitRootLogin no
 StrictModes no
 #MaxAuthTries 6
 #MaxSessions 10
@@ -129,6 +129,9 @@ AuthorizedKeysFile  /users/config/ssh/authorized_keys
 Match group datastore
         ChrootDirectory /users/datastore/%u/
         AuthenticationMethods keyboard-interactive
+        X11Forwarding no
+        AllowTcpForwarding no
+        ForceCommand internal-sftp
 
 Match group visitor
         ChrootDirectory /users/visitor/%u/
