@@ -9,7 +9,7 @@ bash rbac -r advanced1 advanced
 
 rm -rf /users/
 
-bash setup "$1"
+bash rbac_dir/setup "$1"
 
 echo "Segon rbac"
 

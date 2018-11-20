@@ -56,17 +56,17 @@ EOT
 
 function creaConfigs()
 {
-    cp /home/$userhome/enviroment /users/config/
+    cp /home/$userhome/rbac_dir/enviroment /users/config/
     chmod 755 /users/config/enviroment
-    cp /home/$userhome/escolta.sh /users/config/
+    cp /home/$userhome/rbac_dir/escolta.sh /users/config/
     chmod 755 /users/config/escolta.sh
-    cp /home/$userhome/.envia.sh /users/config/
+    cp /home/$userhome/rbac_dir/.envia.sh /users/config/
     chmod 755 /users/config/.envia.sh
-    cp /home/$userhome/repMail.sh /users/config/
+    cp /home/$userhome/rbac_dir/repMail.sh /users/config/
     chmod 755 /users/config/repMail.sh
-    cp /home/$userhome/gestioEntorn /users/config/
+    cp /home/$userhome/rbac_dir/gestioEntorn /users/config/
     chmod 755 /users/config/gestioEntorn
-    cp /home/$userhome/removeEnviroment /users/config/
+    cp /home/$userhome/rbac_dir/removeEnviroment /users/config/
     chmod 755 /users/config/removeEnviroment
 
     cd /users/config
@@ -182,5 +182,5 @@ creaDaemonMail
 
 creaAuth
 
-creaSSH
+#creaSSH
 
