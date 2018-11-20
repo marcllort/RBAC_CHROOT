@@ -7,6 +7,20 @@
 #FUNCIONS
 
 
+function creaSSH()
+{
+    
+    #mkdir -p /users/config/ssh/
+    #cd /users/config/ssh
+    cat <<EOT >> /users/config/ssh/$user/authorized_keys
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkl/f8igvh7Ab6SpHjR4sK6ksKmkdPPOtxcBxIFTqx/vtAX0Ohdj4GOtEUy9xsu08VajKksRTIckCyN/ByWS1nbRX8GGj4l3gFCHC+lLQPwXrvBJlSJTPRh5EjVG1ZgPmhzSMEg8V0EJHclPE5yUFF6JMvstAJ1D3Hxr18WikGxQ68G6SQ/8SuTtV2qeyEw/tLWk14WNHn02YmH7vPG1feaj6qNkWLuAJA2ygtuDN8gyjC3+IKqeWpH6TKNioNhb8TSGviwzY4AiO1cpWLhHAqN221Bafzhizt45IZjyMRaSHWeqnh+a8u+PQ6B6kW74oGl5zQxipliqrGhwEK1kc9 $userhome@MBP-de-Marc
+EOT
+
+    #chmod 755 /users/config/ssh
+    #chmod 755 /users/config/ssh/authorized_keys
+}
+
+
 function llegeixConfig()
 {
     i=0
@@ -93,6 +107,10 @@ function creaUser()
 		
 		useradd -G $rol $user -d /home/$user		
 
+		mkdir -p /users/config/ssh/$user/
+		touch authorized_keys
+
+		
 
 		#Poso skel a la home
 		mkdir -p $JAIL/home
@@ -105,7 +123,9 @@ function creaUser()
 		chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
 		chmod 755 $JAIL/home/$user/.ssh			#prova
 
-		
+		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
+
+		cat $JAIL/home/$user/.ssh/$user-key.pub >> /users/config/ssh/$user/authorized_keys
 
 		#Donem propietat del home al usuari
 		chown $user: $JAIL/home/$user
@@ -206,6 +226,7 @@ case "$function" in
 		checkGroup
 		llegeixConfig
 		creaUser
+		creaSSH
 		;;
 	"-r" | "--remove")
 		remove $deleteTipus
