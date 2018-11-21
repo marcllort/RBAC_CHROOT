@@ -45,6 +45,13 @@ Com entregar la practica? Format FHS, cada cosa modificada dins la seva carpeta?
 
 
 
+echo -e "Subject: Request from ddd \n\n dd" |netcat localhost 5555 -w0
+
+echo $(cat /users/configuracio | tail -n1)
+echo $(sed "2q;d" /users/configuracio)
+
+
+
 
 
 

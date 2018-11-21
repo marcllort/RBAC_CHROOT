@@ -3,6 +3,33 @@
 
 #FUNCIONS
 
+function llegeixDirConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                CONFIG="$line"
+                ;;
+
+            1)
+                MAIL="$line"
+                ;;
+            
+            2)
+                PORTroot="$line"
+                ;;
+            3)
+                PORTmail="$line"
+                ;;
+
+            *)
+                ;;
+        esac
+        i=$((i+1))
+    done < "/configuracio"
+}
+
 function llegeixConfig()
 {
     i=0
@@ -79,7 +106,7 @@ function requestCommnad {
 
 	echo "What is your request?"
 	read line
-	echo -e "Subject: Request from $user \n\n $line" |netcat localhost 5555 -w0
+	echo -e "Subject: Request from $user \n\n $line" |netcat localhost $PORTmail -w0
 	
 }
 
@@ -126,6 +153,7 @@ case "$1" in
 		list
 		;;
 	"--request-command")
+		llegeixDirConfig
 		requestCommnad
 		;;
 	*)

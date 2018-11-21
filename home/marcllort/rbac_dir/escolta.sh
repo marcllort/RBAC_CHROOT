@@ -1,7 +1,43 @@
 #!/bin/bash
 
+function llegeixDirConfig()
+{
+    i=0
+    while read -r line; do
+        case "$i" in
+            0)
+                CONFIG="$line"
+                ;;
+
+            1)
+                MAIL="$line"
+                ;;
+            
+            2)
+                PORTroot="$line"
+                ;;
+            3)
+                PORTmail="$line"
+                ;;
+
+            *)
+                ;;
+        esac
+        i=$((i+1))
+    done < "$CONFIGBASE/configuracio"
+}
+
+
+CONFIGBASE=/users
+
+
+llegeixDirConfig
+
 while [ true ]; do
-    comanda=$(netcat -l 4444)
+
+
+
+    comanda=$(netcat -l $PORTroot)
     
     #tractem els parametres rebuts
 
