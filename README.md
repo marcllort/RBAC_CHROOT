@@ -5,7 +5,7 @@ FASE 1 RBAC
 
 1. Cal instalar openssh-server i libpam-google-authenticator: 
     a) sudo apt install openssh-server
-    b) sudo apt-get install libpam-google-authenticator
+    b) sudo apt-get install libpam-google-authenticator (Si falla 1er fer: sudo add-apt-repository universe)
 
 2. Copiar fitxers:
     a) .bashrc -> /etc/skel/
