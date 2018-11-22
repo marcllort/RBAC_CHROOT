@@ -45,3 +45,37 @@ Per executar el script: "sudo bash test <nomUsuari>"
 
 --EXPLICACIÓ SCRIPTS
 
+    #Servers-Clients
+
+    .envia.sh)
+        Encarregat de enviar comandes per ser executades, al servidor escolta.sh. Sempre s'enviaràn comandes per borrar entorns/home (amb el script removeEnviroment)
+
+    escolta.sh)
+        Server que escolta comandes de .envia.sh i les executa segons la comanda i el usuari rebuts. Rebra "user-borraX" i segons això farà una funció o altra.
+
+    gestioEntorn)
+        Eina disponible per cada usuari per efectuar el reset del seu entorn, clean-all per borrar entorn i home, request-command per enviar solicitud al admin. Les dos primeres opcions enviaràn al server escolta.sh, mentre que el mail enviarà al server repMail.sh.
+
+    repMail.sh)
+        Server encarregat de rebre els request-command dels users i enviar-los mitjançant sendmail.
+
+
+    #Creacio usuaris/entorns
+
+    rbac)
+        Creació d'usuaris segons el rol. Afegeix el usuari, crea un path a /users/rol/userx i posa el fitxer de configuració que haurà de segur durant la creació del seu entorn, quan fagi login.
+
+    enviroment)
+        Llegeix arxiu de configuració i segons aquest copia els programes i llibreries necessaris, juntament amb els fitxers indispensables.
+
+    removeEnviroment)
+        Encarregat de borrar tant entorns com home's segons les instruccions que li arribin. En cas de no poder realitzar alguna acció de borrat perquè el usuari esta logejat, l'agefirà al seu bash_logout per executar quan faci logout.
+
+
+    #Scripts de test/automatització
+
+    setup)
+        Monta el primer cop els diferents arxius de configuració a les localitzacions configurades, crea els grups dels rols principals, i borra usuaris/carpetes existests a /users en cas d'haver-ne
+
+    test)
+        Genera un usuari de test de cada tipus, amb la nomenclatura ex: "datastore1", "visitor1"... També els borra si ja existien anteriorment. Totes aquestes funcions les realitza mitjançant els scripts creats anteriorment, (setup, rbac funcions -a i -r)
