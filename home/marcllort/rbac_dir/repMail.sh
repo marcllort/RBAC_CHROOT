@@ -45,7 +45,7 @@ while [ true ]; do
 
     admin=$(sed "2q;d" /users/configuracio)
 
-    sendmail $admin < message.txt
+    sendmail $admin < message.txt &
 
     rm message.txt
 done

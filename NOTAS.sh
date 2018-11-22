@@ -25,8 +25,10 @@ Com ha de funcionar el clean-all: Demoment el faig fora i borro tot, ja es crear
 Enunviat diu indicar problema en cas derror alhora de crear entorn, com hu faig si hu executa el pam?
 
 
-Cal mirar comanda ps i altres comandes haveure si funcionen
+Fallen comandes: vim, ps, awk, strace
 
+
+cp -r /usr/lib /users/medium/medium1/usr/lib/
 
 
 

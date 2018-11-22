@@ -8,6 +8,10 @@ FASE 1 RBAC
     a) sudo apt install openssh-server
     b) sudo apt-get install libpam-google-authenticator
     c) sudo apt install sendmail-bin
+    d) sudo apt install gcc
+    e) sudo apt install default-jre
+    f) sudo apt install python-pip
+    g) sudo apt install valgrind
 
 2. Copiar fitxers:
     a) .bashrc -> /etc/skel/
@@ -36,3 +40,8 @@ FASE 1 RBAC
 Per executar el script: "sudo bash test <nomUsuari>"
 
 2. Connectar-nos a través de terminal o putty amb la ip capturada anteriorment. Posar al davant de la ip el nom del usuari al que volem connectar-nos: "ssh visitor1@192.168.25.1"
+
+
+
+--EXPLICACIÓ SCRIPTS
+

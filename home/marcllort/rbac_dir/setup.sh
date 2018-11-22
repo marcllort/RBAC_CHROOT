@@ -8,7 +8,7 @@ function creaDaemonEntorn()
     systemctl stop dimoniRoot
     systemctl disable dimoniRoot
     rm /lib/systemd/system/dimoniRoot.service
-    systemctl daemon-reload
+    systemctl daemon-reloadg
     systemctl reset-failed
 
     cat <<EOT >> /lib/systemd/system/dimoniRoot.service
@@ -102,7 +102,7 @@ EOT
     #cal afegir dos mes al advanced
 
     cat <<EOT >> advanced
-    bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python,pip,valgrind,grep,awk,sed,chmod,chown,strace,chroot
+    bash,touch,mkdir,rm,ls,vim,nano,gcc,make,kill,java,ln,ps,python3,pip,valgrind,grep,awk,sed,chmod,chown,strace,cat,mv,rm,rmdir,clear
     /etc/skel
     persistent
     persistent

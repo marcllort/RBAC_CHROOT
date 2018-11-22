@@ -32,7 +32,7 @@ session    optional     pam_keyinit.so force revoke
 
 
 
-auth [default=ignore] pam_exec.so /users/config/enviroment "$PAM_USER"
+auth [default=ignore] pam_exec.so stdout /users/config/enviroment "$PAM_USER"
 
 
 # Print the message of the day upon successful login.
