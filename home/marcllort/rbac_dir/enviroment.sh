@@ -162,6 +162,15 @@ function limitatempsHome()
 
 function copiaFitxers()
 {
+
+    #Poso skel a la home
+	
+
+    #Posem fitxer de enviar comandes al dimoniRoot
+	cp /users/config/.envia.sh $JAIL/home/$user/
+	chmod 755 $JAIL/home/$user/.envia.sh
+
+
     mkdir -p $JAIL/
     mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,bin}
     mknod -m 666 $JAIL/dev/null c 1 3
@@ -170,6 +179,8 @@ function copiaFitxers()
     then
         mkdir -p $JAIL/home
         cp -r $direccioBashrc $JAIL/home/$user
+        chown $user: $JAIL/home/$user
+        
     fi
 
     cd $JAIL/etc

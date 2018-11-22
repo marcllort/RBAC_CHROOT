@@ -124,7 +124,7 @@ Subsystem sftp internal-sftp
 
 
 
-AuthorizedKeysFile  /users/config/ssh/authorized_keys
+AuthorizedKeysFile  /users/config/ssh/%u/authorized_keys
 
 Match group datastore
         ChrootDirectory /users/datastore/%u/

@@ -108,34 +108,33 @@ function creaUser()
 		useradd -G $rol $user -d /home/$user		
 
 		mkdir -p /users/config/ssh/$user/
-		touch authorized_keys
+		chown $user /users/config/ssh/$user
+		touch /users/config/ssh/$user/authorized_keys
 
+		mkdir -p /users/config/googleauth/$user
 		
 
-		#Poso skel a la home
-		mkdir -p $JAIL/home
-		cp -r $direccioBashrc $JAIL/home/$user
-	
-		
 
 		#Poso ssh a la home
-		mkdir -p $JAIL/home/$user/.ssh
-		chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
-		chmod 755 $JAIL/home/$user/.ssh			#prova
+		mkdir -p $JAIL
+		#chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
+		#chmod 755 $JAIL/home/$user/.ssh			#prova
 
-		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f $JAIL/home/$user/.ssh/$user-key -N ''"
+		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f /users/config/ssh/$user/$user-key -N ''"
 
-		cat $JAIL/home/$user/.ssh/$user-key.pub >> /users/config/ssh/$user/authorized_keys
+
+		google-authenticator -s /users/config/googleauth/$user/.google_authenticator -t -q -d -f -u -w 3
+
+
+		cat /users/config/ssh/$user/$user-key.pub >> /users/config/ssh/$user/authorized_keys
 
 		#Donem propietat del home al usuari
-		chown $user: $JAIL/home/$user
+		
 
 		#Posem fitxer de configuració del rol determinat
 		cp $CONFIG/$rol $JAIL/
 
-		#Posem fitxer de enviar comandes al dimoniRoot
-		cp /users/config/.envia.sh $JAIL/home/$user/
-		chmod 755 $JAIL/home/$user/.envia.sh
+		
 
 	fi
 	
