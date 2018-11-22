@@ -9,12 +9,9 @@ function remove()
 	case $function in
 		userenviroment)
 			echo "Deleting enviroment..."
-			#userdel $user
 			
 			cd $JAIL
 			find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
-			
-			
 			;;
 
 		userhome)
@@ -28,7 +25,6 @@ function remove()
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
 					
-				#echo "echo "$user-borraHomeCon" |netcat localhost 4444 -w0" >> "$JAIL/home/$user/.bash_logout"
 				echo "bash /home/$user/.envia.sh borraHomeCon" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;
@@ -68,9 +64,7 @@ JAIL_BIN=$JAIL/bin/
 
 if [ "$1" = "remove" ]
 then
-
     echo "Deleting environment... USER: $user - $rol function: $function"
 
     remove
-
 fi

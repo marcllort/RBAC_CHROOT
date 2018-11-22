@@ -9,15 +9,10 @@
 
 function creaSSH()
 {
-    
-    #mkdir -p /users/config/ssh/
-    #cd /users/config/ssh
     cat <<EOT >> /users/config/ssh/$user/authorized_keys
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkl/f8igvh7Ab6SpHjR4sK6ksKmkdPPOtxcBxIFTqx/vtAX0Ohdj4GOtEUy9xsu08VajKksRTIckCyN/ByWS1nbRX8GGj4l3gFCHC+lLQPwXrvBJlSJTPRh5EjVG1ZgPmhzSMEg8V0EJHclPE5yUFF6JMvstAJ1D3Hxr18WikGxQ68G6SQ/8SuTtV2qeyEw/tLWk14WNHn02YmH7vPG1feaj6qNkWLuAJA2ygtuDN8gyjC3+IKqeWpH6TKNioNhb8TSGviwzY4AiO1cpWLhHAqN221Bafzhizt45IZjyMRaSHWeqnh+a8u+PQ6B6kW74oGl5zQxipliqrGhwEK1kc9 $userhome@MBP-de-Marc
 EOT
 
-    #chmod 755 /users/config/ssh
-    #chmod 755 /users/config/ssh/authorized_keys
 }
 
 
@@ -78,7 +73,6 @@ function checkGroup()
 			case "$resposta" in
 				y|Y)
 					groupadd "$rol"
-					#cal afegir el match group a /etc/ssh/sshd_config
 					afegeixConfig
 					;;
 
@@ -98,6 +92,7 @@ function checkGroup()
 
 }
 
+
 function creaUser()
 {
 	#Miro si ja existeix usuari
@@ -107,18 +102,18 @@ function creaUser()
 		
 		useradd -G $rol $user -d /home/$user		
 
+		#Creo fitxers necessaris per ssh
 		mkdir -p /users/config/ssh/$user/
 		chown $user /users/config/ssh/$user
 		touch /users/config/ssh/$user/authorized_keys
 
+		#Creo fitxers necessaris per googleauth
 		mkdir -p /users/config/googleauth/$user
-		
 
 
-		#Poso ssh a la home
+		#Careo direcotri de la jail
 		mkdir -p $JAIL
-		#chown $user $JAIL/home/$user/.ssh		#Cal fer per quan es crei el ssh key
-		#chmod 755 $JAIL/home/$user/.ssh			#prova
+		
 
 		runuser -l $user -s /bin/sh -c "ssh-keygen -t rsa -b 2048 -f /users/config/ssh/$user/$user-key -N ''"
 
@@ -127,14 +122,11 @@ function creaUser()
 
 
 		cat /users/config/ssh/$user/$user-key.pub >> /users/config/ssh/$user/authorized_keys
-
-		#Donem propietat del home al usuari
 		
 
 		#Posem fitxer de configuració del rol determinat
 		cp $CONFIG/$rol $JAIL/
 
-		
 
 	fi
 	
@@ -147,7 +139,6 @@ function remove()
 	case $function in
 		userenviroment)
 			echo "Deleting enviroment..."
-			#userdel $user
 			
 			cd $JAIL
 			find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
@@ -157,7 +148,7 @@ function remove()
 
 		userhome)
 			echo "Deleting home..."
-			#userdel $user
+
 			who | grep "$user"
 			funciona=$?
 			if [ $funciona -eq 1 ]; then
@@ -165,9 +156,6 @@ function remove()
 				echo "User deleted"
 			else
 				echo "User is logged in. After he logs out, user will be deleted."
-				#direccio="$(locate $user | head -n 1)"
-				#updatedb
-				#echo "La direccio de user es: $direccio/.bash_logout"
 				echo "bash /home/$user/.envia.sh borraHomeCon" >> "$JAIL/home/$user/.bash_logout"
 			fi
 			;;

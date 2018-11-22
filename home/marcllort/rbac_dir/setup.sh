@@ -140,9 +140,6 @@ EOT
 
 function creaSSH()
 {
-    
-    #mkdir -p /users/config/ssh/
-    #cd /users/config/ssh
     cat <<EOT >> authorized_keys
     ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCkl/f8igvh7Ab6SpHjR4sK6ksKmkdPPOtxcBxIFTqx/vtAX0Ohdj4GOtEUy9xsu08VajKksRTIckCyN/ByWS1nbRX8GGj4l3gFCHC+lLQPwXrvBJlSJTPRh5EjVG1ZgPmhzSMEg8V0EJHclPE5yUFF6JMvstAJ1D3Hxr18WikGxQ68G6SQ/8SuTtV2qeyEw/tLWk14WNHn02YmH7vPG1feaj6qNkWLuAJA2ygtuDN8gyjC3+IKqeWpH6TKNioNhb8TSGviwzY4AiO1cpWLhHAqN221Bafzhizt45IZjyMRaSHWeqnh+a8u+PQ6B6kW74oGl5zQxipliqrGhwEK1kc9 $userhome@MBP-de-Marc
 EOT
@@ -181,8 +178,3 @@ creaDaemonEntorn
 
 #Crea el dimoni encarregat d'enviar el mail amb el request command
 creaDaemonMail
-
-creaAuth
-
-#creaSSH
-

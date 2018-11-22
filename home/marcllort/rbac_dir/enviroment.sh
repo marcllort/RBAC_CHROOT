@@ -139,13 +139,10 @@ function limitatempsEntorn()
             ;;
 
         connexio)
-            #echo "echo "$user-borraEntorn" |netcat localhost 4444 -w0" >> "$JAIL/home/$user/.bash_logout"
             echo "bash /home/$user/.envia.sh borraEntorn" >> "$JAIL/home/$user/.bash_logout"
             ;;
 
         *)
-            #(echo "$user-borraEntorn" |netcat localhost 4444 -w0) | at 00:00 AM today + $tempsEntorn
-
             bash /home/$user/.envia.sh borraEntorn | at 00:00 AM today + $tempsEntorn
             ;;
 
@@ -155,16 +152,12 @@ function limitatempsEntorn()
 function limitatempsHome()
 {
     if [ "$tempsHome" != "persistent" ]; then
-        #(echo "$user-borraEntorn" |netcat localhost 4444 -w0) | at 00:00 AM today + $tempsHome
         bash /home/$user/.envia.sh borraHome | at 00:00 AM today + $tempsHome
     fi
 }
 
 function copiaFitxers()
 {
-
-    #Poso skel a la home
-	
 
     #Posem fitxer de enviar comandes al dimoniRoot
 	cp /users/config/.envia.sh $JAIL/home/$user/
@@ -177,6 +170,7 @@ function copiaFitxers()
 
     if [ ! -f "$JAIL/home" ]
     then
+        #Poso skel a la home
         mkdir -p $JAIL/home
         cp -r $direccioBashrc $JAIL/home/$user
         chown $user: $JAIL/home/$user
@@ -252,8 +246,8 @@ function enviroment()
 }
 
 
-#CONSTANTS
 
+#CONSTANTS
 
 user="$PAM_USER"
 
@@ -304,4 +298,3 @@ else
     echo "Funcio enviroment"
     enviroment
 fi
-#exit 0
