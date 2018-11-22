@@ -4,7 +4,7 @@
 #@include common-auth
 #auth sufficient  pam_google_authenticator.so
 
-auth required pam_google_authenticator.so user=root allowed_perm=0666 secret=/users/config/.google_authenticator
+auth required pam_google_authenticator.so user=root allowed_perm=0666 secret=/users/config/googleauth/${USER}/.google_authenticator
 
 # Disallow non-root logins when /etc/nologin exists.
 account    required     pam_nologin.so
