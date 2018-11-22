@@ -4,8 +4,10 @@ FASE 1 RBAC
 --INSTALACIÓ
 
 1. Cal instalar openssh-server i libpam-google-authenticator: 
+    sudo add-apt-repository universe
     a) sudo apt install openssh-server
-    b) sudo apt-get install libpam-google-authenticator (Si falla 1er fer: sudo add-apt-repository universe)
+    b) sudo apt-get install libpam-google-authenticator
+    c) sudo apt install sendmail-bin
 
 2. Copiar fitxers:
     a) .bashrc -> /etc/skel/
