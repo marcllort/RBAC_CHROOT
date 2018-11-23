@@ -1,4 +1,4 @@
-FASE 1 RBAC
+FASE 1 RBAC (marc.llort i alex.almansa)
 
 
 --INSTALACIÓ
@@ -30,8 +30,9 @@ FASE 1 RBAC
     a) fdisk /dev/sdb
     b) Fem "n", "p", enter, enter, last. Ara "w" per escriure els canvis.
     c) Executem: "mkfs -t ext3 /dev/sdb1","mkfs.ext3  /dev/sdb1", "mke2fs -j /dev/sdb1"
-    d) Editem el fitxer "/etc/fstab/" i posem: "/dev/sdb1 /usersext3 defaults 2 1"
+    d) Editem el fitxer "/etc/fstab" i posem: "/dev/sdb1 /usersext3 defaults 2 1"
     e) Reiniciem la maquina virtual
+    #https://www.linuxtotal.com.mx/index.php?cont=info_admon_001
 
 7. Executa setup amb "sudo bash setup <nomUsuari>", per generar la estructura bàsica del rbac.
 

@@ -84,6 +84,7 @@ function confirmaUser {
 
 function clean {
 	function="userhome"
+	echo "Your home and enviroment will be deleted, and your session will close!"
 	confirma
 	confirmaUser
 
@@ -91,6 +92,7 @@ function clean {
 }
 
 function reset {
+	echo "Your enviroment will be reseted. It will take about 10s."
 	confirma
 
 	bash /home/$user/.envia.sh reset

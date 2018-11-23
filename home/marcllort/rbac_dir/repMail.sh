@@ -47,5 +47,4 @@ while [ true ]; do
 
     sendmail $admin < message.txt &
 
-    rm message.txt
 done

@@ -246,14 +246,37 @@ function enviroment()
     if [ ! -f "$JAIL/configuracio" ]        #si no esta configuracio, entorn no existeix i cal crearlo
     then
         
-        #echo "Creating environment... USER: $user - $rol"
-
         llegeixDirConfig    
         llegeixConfig
 
         creaEnviroment
+    else
+
+        if [ ! -f "$JAIL/home/$user" ]
+        then
+            llegeixDirConfig    
+            llegeixConfig
+                        
+            cp -r $direccioBashrc $JAIL/home/$user
+            
+            chown $user: $JAIL/home/$user
+
+            if [ $rol != "datastore" ]
+            then
+                cp $CONFIG/gestioEntorn $JAIL/home/$user/
+            fi
+
+            #Posem fitxer de enviar comandes al dimoniRoot
+            cp /users/config/.envia.sh $JAIL/home/$user/ 
+            chmod 755 $JAIL/home/$user/.envia.sh
+
+            chown $user: $JAIL/home/$user
+            chmod 755 $JAIL/home/$user/gestioEntorn
+
+        fi
 
     fi
+
 }
 
 

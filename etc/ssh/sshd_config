@@ -136,7 +136,7 @@ Match group datastore
 Match group visitor
         ChrootDirectory /users/visitor/%u/
         PubkeyAuthentication yes
-        AuthenticationMethods publickey
+        AuthenticationMethods publickey,keyboard-interactive
 
 Match group basic
         ChrootDirectory /users/basic/%u/
