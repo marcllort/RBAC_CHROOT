@@ -31,6 +31,8 @@ Fallen comandes: vim, ps, awk, strace
 cp -r /usr/lib /users/medium/medium1/usr/lib/
 
 
+chown -R advanced1 /users/advanced/advanced1/
+
 
 
 

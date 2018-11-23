@@ -231,6 +231,9 @@ function creaEnviroment()
         
         advanced)
             copiaProgrames
+            
+            chown -R $user /users/$rol/$user/* &>/dev/null
+ 
             ;;
          
         *)
