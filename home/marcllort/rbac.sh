@@ -141,6 +141,7 @@ function remove()
 			echo "Deleting enviroment..."
 			
 			cd $JAIL
+			umount $JAIL/proc
 			find . -maxdepth 1 ! -iname "$rol" ! -iname home -exec rm -rf {} \;
 			echo "User deleted"
 			
@@ -165,6 +166,8 @@ function remove()
 			userdel $user
 			funciona=$?
 			if [ $funciona -eq 0 ]; then
+				umount $JAIL/proc
+				rm -rf $JAIL/
 				echo "User deleted"
 			else
 				echo "User is logged in."
@@ -179,7 +182,7 @@ function help {
 	echo "Usage: rbac [COMMAND]"
 	echo "Add and remove users.\n"
 	echo "-a, --add			add user. Must specify user type. Ex: rbac -a foo visitor"
-	echo "-r, --remove			remove user. If added userhome, home will be deleted to Ex: rbac -r foo visitor userhome"
+	echo "-r, --remove			remove user, home and enviroment. If added userhome, only home will be deleted to Ex: rbac -r foo visitor userhome. If userenviroment added, only enviroment will be deleted."
 	echo "-h, --help			help info"
 }
 

@@ -7,7 +7,7 @@ FASE 1 RBAC (marc.llort i alex.almansa)
     sudo add-apt-repository universe
     a) sudo apt install openssh-server
     b) sudo apt-get install libpam-google-authenticator
-    c) sudo apt install sendmail-bin
+    c) sudo apt install sendmail
     d) sudo apt install gcc
     e) sudo apt install default-jre
     f) sudo apt install python-pip

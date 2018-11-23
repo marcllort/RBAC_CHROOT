@@ -162,10 +162,7 @@ function limitatempsHome()
 function copiaFitxers()
 {
 
-    mkdir -p $JAIL/
-    mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,usr/lib,bin}
-    mknod -m 666 $JAIL/dev/null c 1 3
-
+    
     if [ ! -f "$JAIL/home" ]
     then
         #Poso skel a la home
@@ -175,25 +172,34 @@ function copiaFitxers()
         
     fi
 
-    cd $JAIL/etc
-    cp /etc/ld.so.cache .
-    cp /etc/ld.so.conf .
-    cp /etc/nsswitch.conf .
-    cp /etc/passwd .
-    cp /etc/group .
-    cp /etc/shadow .
-    cp /etc/hosts .
-    cp /etc/resolv.conf .
-
-    cp -r /bin/sh $JAIL/bin
-    cp -r /bin/bash $JAIL/bin
-    cp -r /lib $JAIL/
-    cp -r /lib64 $JAIL/
-    cp -r /usr/lib $JAIL/usr/
     
     if [ $rol != "datastore" ]
     then
+        mkdir -p $JAIL/
+        mkdir -p $JAIL/{dev,etc,lib,lib64,usr/bin,usr/sbin,usr/lib,bin}
+        mknod -m 666 $JAIL/dev/null c 1 3
+
+        cd $JAIL/etc
+        cp /etc/ld.so.cache .
+        cp /etc/ld.so.conf .
+        cp /etc/nsswitch.conf .
+        cp /etc/passwd .
+        cp /etc/group .
+        cp /etc/shadow .
+        cp /etc/hosts .
+        cp /etc/resolv.conf .
+
+        cp -r /bin/sh $JAIL/bin
+        cp -r /bin/bash $JAIL/bin
+        cp -r /lib $JAIL/
+        cp -r /lib64 $JAIL/
+        cp -r /usr/lib $JAIL/usr/
+
         cp $CONFIG/gestioEntorn $JAIL/home/$user
+        chmod 755 $JAIL/home/$user/gestioEntorn
+
+        mkdir -p $JAIL/proc
+        mount -t proc proc $JAIL/proc
     fi
 
     #Posem fitxer de enviar comandes al dimoniRoot
@@ -205,11 +211,6 @@ function copiaFitxers()
 
     chown root.root $JAIL/
 	chown $user: $JAIL/home/$user
-    chmod 755 $JAIL/home/$user/gestioEntorn
-
-
-    mkdir -p $JAIL/proc
-    mount -t proc proc $JAIL/proc
 
 }
 
