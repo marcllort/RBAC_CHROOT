@@ -17,7 +17,7 @@ FASE 1 RBAC
     a) .bashrc -> /etc/skel/
     b) sshd_config -> /etc/ssh/
     c) sshd -> /etc/pam.d/
-    d) (Cal provar) Modificar /etc/default/useradd -> canviar "/bin/sh" per "/bin/bash"
+    d) Modificar /etc/default/useradd -> canviar "/bin/sh" per "/bin/bash"
 
 3. Apuntar-nos la adreça inet de la comanda "ifconfig", per posteriorment connectar-nos per ssh
 
@@ -26,9 +26,16 @@ FASE 1 RBAC
 5. Copiar els seguents scripts a la home del teu usuari/admin del server:
     escolta.sh, .envia.sh, repMail.sh, gestioEntorn, removeEnviroment, enviroment, rbac, test
 
-6. Executa setup amb "sudo bash setup <nomUsuari>", per generar la estructura bàsica del rbac.
+6. Afegir disc dur desde vmware/virtualbox. Iniciem la maquina virtual i fem:
+    a) fdisk /dev/sdb
+    b) Fem "n", "p", enter, enter, last. Ara "w" per escriure els canvis.
+    c) Executem: "mkfs -t ext3 /dev/sdb1","mkfs.ext3  /dev/sdb1", "mke2fs -j /dev/sdb1"
+    d) Editem el fitxer "/etc/fstab/" i posem: "/dev/sdb1 /usersext3 defaults 2 1"
+    e) Reiniciem la maquina virtual
 
-7. Preparar metodes d'autentificació:
+7. Executa setup amb "sudo bash setup <nomUsuari>", per generar la estructura bàsica del rbac.
+
+8. Preparar metodes d'autentificació:
     a) SSH: Modificar script setup, funcio "creaSSH", i posar la nostra pubkey allà
     b) GoogleAuth: Correr "google-authenticator" desde el admin, configurar com vulguem, escanejar QR, anar a la nostra home/, fer "cat .google_authenticator" i copiar el contingut del fitxer a dins la funció "creaAuth" del script setup.
 
@@ -45,7 +52,7 @@ Per executar el script: "sudo bash test <nomUsuari>"
 
 --EXPLICACIÓ SCRIPTS
 
-    #Servers-Clients
+    Servers-Clients
 
     .envia.sh)
         Encarregat de enviar comandes per ser executades, al servidor escolta.sh. Sempre s'enviaràn comandes per borrar entorns/home (amb el script removeEnviroment)
@@ -60,7 +67,7 @@ Per executar el script: "sudo bash test <nomUsuari>"
         Server encarregat de rebre els request-command dels users i enviar-los mitjançant sendmail.
 
 
-    #Creacio usuaris/entorns
+    Creacio usuaris/entorns
 
     rbac)
         Creació d'usuaris segons el rol. Afegeix el usuari, crea un path a /users/rol/userx i posa el fitxer de configuració que haurà de segur durant la creació del seu entorn, quan fagi login.
@@ -72,7 +79,7 @@ Per executar el script: "sudo bash test <nomUsuari>"
         Encarregat de borrar tant entorns com home's segons les instruccions que li arribin. En cas de no poder realitzar alguna acció de borrat perquè el usuari esta logejat, l'agefirà al seu bash_logout per executar quan faci logout.
 
 
-    #Scripts de test/automatització
+    Scripts de test/automatització
 
     setup)
         Monta el primer cop els diferents arxius de configuració a les localitzacions configurades, crea els grups dels rols principals, i borra usuaris/carpetes existests a /users en cas d'haver-ne

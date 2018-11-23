@@ -53,7 +53,7 @@ function llegeixConfig()
 
     fi
 
-    if [ -f "$CONFIG/$conf" ]        #si no esta configuracio, entorn no existeix i cal crearlo
+    if [ -f "$CONFIG/$conf" ]       #si no esta configuracio, entorn no existeix i cal crearlo
     then
 
         i=0
@@ -98,8 +98,6 @@ function copy_dependencies()
 
 	FILES="$(ldd $1 &>/dev/null | awk '{ print $3 }' |egrep -v ^'\(')" 
 
-	#echo "Copying shared files/libs to $JAIL..."
-
 	for i in $FILES
 	do
 		d="$(dirname $i &>/dev/null)" 
@@ -111,12 +109,10 @@ function copy_dependencies()
 
 	sldl="$(ldd $1 &>/dev/null | grep 'ld-linux' | awk '{ print $1}')" 
 
-	# now get sub-dir
 	sldlsubdir="$(dirname $sldl &>/dev/null)" 
 
 	if [ ! -f $JAIL$sldl ];
 	then
-		#echo "Copying $sldl $JAIL$sldlsubdir..."
 		/bin/cp $sldl $JAIL$sldlsubdir &>/dev/null
 	else
 		:
