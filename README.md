@@ -37,7 +37,7 @@ FASE 1 RBAC (marc.llort i alex.almansa)
 7. Executa setup amb "sudo bash setup <nomUsuari>", per generar la estructura bàsica del rbac.
 
 8. Preparar metodes d'autentificació:
-    a) SSH: Modificar script setup, funcio "creaSSH", i posar la nostra pubkey allà
+    a) SSH: Modificar script setup i el script rbac, funcio "creaSSH", i posar la nostra pubkey allà
     b) GoogleAuth: Correr "google-authenticator" desde el admin, configurar com vulguem, escanejar QR, anar a la nostra home/, fer "cat .google_authenticator" i copiar el contingut del fitxer a dins la funció "creaAuth" del script setup.
 
 
@@ -48,7 +48,7 @@ FASE 1 RBAC (marc.llort i alex.almansa)
 Per executar el script: "sudo bash test <nomUsuari>"
 
 2. Connectar-nos a través de terminal o putty amb la ip capturada anteriorment. Posar al davant de la ip el nom del usuari al que volem connectar-nos: "ssh visitor1@192.168.25.1"
-
+3. Per ultim cal cambiar el nom de la home del admin per el teu
 
 
 --EXPLICACIÓ SCRIPTS
