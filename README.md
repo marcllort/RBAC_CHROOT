@@ -1,4 +1,4 @@
-FASE 1 RBAC (marc.llort i alex.almansa)
+# RBAC_CHROOT
 
 
 --INSTALACIÓ
