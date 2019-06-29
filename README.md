@@ -1,7 +1,11 @@
 # RBAC_CHROOT
 
+Role based user acces for Ubuntu OS. Different privileges for different roles, implemented with linux's chroot and Google 2FA.
+All implemented using shell scripts.
 
---INSTALACIÓ
+
+
+INSTALACIÓ
 
 1. Cal instalar openssh-server i libpam-google-authenticator: 
     sudo add-apt-repository universe
@@ -42,7 +46,7 @@
 
 
 
---EXECUCIÓ
+EXECUCIÓ
 
 1. Per afegir usuaris es pot fer us de la comanda rbac, seguir les instruccions a help, o el script test, el qual afegeix (amb la comanda rbac) un usuari de cada tipus, cada un anomenat rol1 (ex: visitor1).
 Per executar el script: "sudo bash test <nomUsuari>"
@@ -51,7 +55,7 @@ Per executar el script: "sudo bash test <nomUsuari>"
 3. Per ultim cal cambiar el nom de la home del admin per el teu
 
 
---EXPLICACIÓ SCRIPTS
+EXPLICACIÓ SCRIPTS
 
 Servers-Clients
 
