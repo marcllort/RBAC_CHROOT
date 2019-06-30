@@ -4,7 +4,6 @@ Role based user acces for Ubuntu OS. Different privileges for different roles, i
 All implemented using shell scripts.
 
 
-
 INSTALACIÓ
 
 1. Cal instalar openssh-server i libpam-google-authenticator: 
